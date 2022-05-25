@@ -15,20 +15,16 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataset": {
-						"referenceName": "ADLBlob",
-						"type": "DatasetReference"
-					},
 					"fieldList": [
-						"columnCount"
+						"childItems"
 					],
 					"storeSettings": {
-						"type": "AzureBlobStorageReadSettings",
-						"recursive": true,
-						"enablePartitionDiscovery": false
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true
 					},
 					"formatSettings": {
-						"type": "DelimitedTextReadSettings"
+						"type": "DelimitedTextReadSettings",
+						"skipLineCount": 0
 					}
 				}
 			},
@@ -46,14 +42,98 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Verifica_Arquivos_Raw').output",
+						"value": "@activity('Verifica_Arquivos_Raw').output.childitems",
 						"type": "Expression"
 					},
 					"batchCount": 10,
 					"activities": [
 						{
-							"name": "Insere Log Inicio",
-							"type": "SqlServerStoredProcedure",
+							"name": "Converte Arquivos para Parquet",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Recupera a Estrutura",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings",
+										"skipLineCount": {
+											"value": "@pipeline().parameters.RowsToSkip",
+											"type": "Expression"
+										}
+									}
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"enableSkipIncompatibleRow": true,
+								"dataIntegrationUnits": 2,
+								"translator": {
+									"value": "@activity('Recupera a Estrutura').output.Structure",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Recupera a Estrutura",
+							"type": "GetMetadata",
+							"dependsOn": [
+								{
+									"activity": "Insere Log Inicio",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"fieldList": [
+									"structure"
+								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							}
+						},
+						{
+							"name": "Verifica Arquivo foi processado",
+							"type": "Lookup",
 							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
@@ -64,7 +144,39 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_InsereLogProcessamento]",
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "DECLARE @A varchar(30)\n\nselect top 1 @A=tmp.A --as Prosseguir  \nFROM\n(\n\tSELECT 'N' as A\n\tfrom dbo.logprocessamento with(nolock)\n\twhere NomeArquivo = '@{item().name}'\n\tand Status = 'Sucesso' \n\tand Camada = 'STAGE'\n\tUNION ALL\n\tSELECT 'S' as A\n) tmp\norder by A\n\nIF @A = 'S'\nBEGIN\n\tRAISERROR ('Necessita Processamento',16,1)\nEND\nELSE\nBEGIN\n\tSELECT 'N' as NecessitaProcessamento\nEND",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "Atualiza Log Sucesso",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Converte Arquivos para Parquet",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
 								"storedProcedureParameters": {
 									"NomePipeline": {
 										"value": {
@@ -88,27 +200,268 @@
 										"type": "String"
 									},
 									"Status": {
-										"value": "Processando",
+										"value": {
+											"value": "Sucesso",
+											"type": "Expression"
+										},
 										"type": "String"
 									},
 									"Detalhe": {
-										"value": "Loading",
+										"value": {
+											"value": "Dados enviado para STAGE com Sucesso",
+											"type": "Expression"
+										},
 										"type": "String"
 									},
 									"isUpdate": {
-										"value": "0",
+										"value": {
+											"value": "1",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaFinal": {
+										"value": {
+											"value": "@concat('STAGE',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoIni": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.dataRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoFim": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.dataWritten",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasIni": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.rowsRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasFim": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.rowsCopied",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasRej": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.rowsSkipped",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaInicial": {
+										"value": null,
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Atualiza Log Falha",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Converte Arquivos para Parquet",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+								"storedProcedureParameters": {
+									"NomePipeline": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Camada": {
+										"value": {
+											"value": "STAGE",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": {
+											"value": "Falha",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Detalhe": {
+										"value": {
+											"value": "Falha na conversão do arquivo",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"isUpdate": {
+										"value": {
+											"value": "1",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaFinal": {
+										"value": {
+											"value": "@concat('RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoIni": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.dataRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoFim": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.dataWritten",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasIni": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.rowsRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasFim": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.rowsCopied",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasRej": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.rowsSkipped",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaInicial": {
+										"value": null,
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Insere Log Inicio",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Verifica Arquivo foi processado",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+								"storedProcedureParameters": {
+									"NomePipeline": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Camada": {
+										"value": {
+											"value": "STAGE",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": {
+											"value": "Em Processamento",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Detalhe": {
+										"value": {
+											"value": "Processando Arquivo",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"isUpdate": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
 										"type": "String"
 									},
 									"HierarquiaFinal": {
 										"value": null,
 										"type": "String"
 									},
-									"TamanhoInicial": {
-										"value": "0",
+									"TamanhoArquivoIni": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
 										"type": "String"
 									},
-									"QtdLinhasInicial": {
-										"value": "0",
+									"QtdLinhasIni": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
 										"type": "String"
 									},
 									"TamanhoArquivoFim": {
@@ -124,92 +477,60 @@
 										"type": "String"
 									},
 									"HierarquiaInicial": {
-										"value": "",
+										"value": {
+											"value": "@concat('RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
+											"type": "Expression"
+										},
 										"type": "String"
 									}
 								}
-							},
-							"linkedServiceName": {
-								"referenceName": "AzureSqlDatabase1",
-								"type": "LinkedServiceReference"
 							}
-						},
-						{
-							"name": "Copy data1",
-							"type": "Copy",
-							"dependsOn": [
-								{
-									"activity": "Insere Log Inicio",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "DelimitedTextSource",
-									"storeSettings": {
-										"type": "AzureBlobStorageReadSettings",
-										"recursive": true,
-										"enablePartitionDiscovery": false
-									},
-									"formatSettings": {
-										"type": "DelimitedTextReadSettings"
-									}
-								},
-								"sink": {
-									"type": "ParquetSink",
-									"storeSettings": {
-										"type": "AzureBlobFSWriteSettings"
-									},
-									"formatSettings": {
-										"type": "ParquetWriteSettings"
-									}
-								},
-								"enableStaging": false,
-								"translator": {
-									"type": "TabularTranslator",
-									"typeConversion": true,
-									"typeConversionSettings": {
-										"allowDataTruncation": true,
-										"treatBooleanAsNumber": false
-									}
-								}
-							},
-							"inputs": [
-								{
-									"referenceName": "ADLBlob",
-									"type": "DatasetReference"
-								}
-							],
-							"outputs": [
-								{
-									"referenceName": "Parquet",
-									"type": "DatasetReference",
-									"parameters": {
-										"Container": "storagemaster",
-										"FileName": {
-											"value": "@{item().name}",
-											"type": "Expression"
-										}
-									}
-								}
-							]
 						}
 					]
 				}
 			}
 		],
-		"annotations": [],
-		"lastPublishTime": "2022-05-25T22:32:26Z"
+		"parameters": {
+			"Ano": {
+				"type": "string"
+			},
+			"Mes": {
+				"type": "string"
+			},
+			"Dia": {
+				"type": "string"
+			},
+			"Hierarquia": {
+				"type": "string"
+			},
+			"Delimitador": {
+				"type": "string"
+			},
+			"RowsToSkip": {
+				"type": "int"
+			},
+			"Encoding": {
+				"type": "string",
+				"defaultValue": "UTF-8"
+			},
+			"TipoCompressao": {
+				"type": "string",
+				"defaultValue": "none"
+			},
+			"QuoteCharacter": {
+				"type": "string",
+				"defaultValue": " "
+			}
+		},
+		"variables": {
+			"NomeArquivo": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "ExecuçãoMestre/STAGE"
+		},
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
