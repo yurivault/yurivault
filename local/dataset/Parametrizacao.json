@@ -1,0 +1,17 @@
+{
+	"name": "Parametrizacao",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "parametrizacao"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

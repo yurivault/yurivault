@@ -1,0 +1,9 @@
+{
+	"name": "agrohml",
+	"location": "brazilsouth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "5eae9faa-96d1-4de9-a095-f898e8a31324",
+		"tenantId": "c6f14aa0-a0eb-412f-b31b-1d89f8eb98f6"
+	}
+}
