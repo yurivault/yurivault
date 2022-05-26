@@ -23,7 +23,9 @@
 							"Container": "storagemaster"
 						}
 					},
-					"fieldList": [],
+					"fieldList": [
+						"childItems"
+					],
 					"storeSettings": {
 						"type": "AzureBlobStorageReadSettings"
 					},
