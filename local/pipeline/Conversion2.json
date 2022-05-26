@@ -497,19 +497,24 @@
 				"defaultValue": "2022"
 			},
 			"Mes": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "05"
 			},
 			"Dia": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "26"
 			},
 			"Hierarquia": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "/Inbox/"
 			},
 			"Delimitador": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": ";"
 			},
 			"RowsToSkip": {
-				"type": "int"
+				"type": "int",
+				"defaultValue": 0
 			},
 			"Encoding": {
 				"type": "string",
