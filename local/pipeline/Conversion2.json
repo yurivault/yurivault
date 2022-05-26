@@ -147,7 +147,7 @@
 											"value": "@replace(replace(replace(toLower(item().name),'.csv','.parquet'),'.txt','.parquet'),'.zip','.parquet')",
 											"type": "Expression"
 										},
-										"Directory": "Inbox"
+										"Directory": "Stage"
 									}
 								}
 							]
