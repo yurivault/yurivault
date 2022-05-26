@@ -3,32 +3,6 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Verifica_Arquivos_Stage",
-				"type": "GetMetadata",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"fieldList": [
-						"childItems"
-					],
-					"storeSettings": {
-						"type": "AzureBlobFSReadSettings",
-						"recursive": true
-					},
-					"formatSettings": {
-						"type": "DelimitedTextReadSettings",
-						"skipLineCount": 0
-					}
-				}
-			},
-			{
 				"name": "Trata Varios Arquivos Comissao",
 				"type": "ForEach",
 				"dependsOn": [
@@ -283,14 +257,7 @@
 						{
 							"name": "Insere Log Inicio",
 							"type": "SqlServerStoredProcedure",
-							"dependsOn": [
-								{
-									"activity": "Verifica Arquivo foi processado",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
+							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -300,7 +267,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+								"storedProcedureName": "[dbo].[proc_InsereLogProcessamento]",
 								"storedProcedureParameters": {
 									"NomePipeline": {
 										"value": {
@@ -382,31 +349,10 @@
 										"type": "String"
 									}
 								}
-							}
-						},
-						{
-							"name": "Verifica Arquivo foi processado",
-							"type": "Lookup",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
 							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderQuery": {
-										"value": "DECLARE @A varchar(30)\n\nselect top 1 @A=tmp.A --as Prosseguir  \nFROM\n(\n\tSELECT 'N' as A\n\tfrom dbo.logprocessamento with(nolock)\n\twhere NomeArquivo = '@{item().name}'\n\tand (Status = 'Sucesso' or (Status = 'Em Processamento' and datediff(hour,DataInicio,getdate()) <= 4 ))\n\tand Camada = 'DW'\n\tUNION ALL\n\tSELECT 'S' as A\n) tmp\norder by A\n\nIF @A = 'N'\nBEGIN\n\tRAISERROR ('Arquivo Já Processado',16,1)\nEND\nELSE\nBEGIN\n\tSELECT 'S' as Prosseguir\nEND",
-										"type": "Expression"
-									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"firstRowOnly": false
+							"linkedServiceName": {
+								"referenceName": "AzureSqlDatabase1",
+								"type": "LinkedServiceReference"
 							}
 						},
 						{
@@ -1000,6 +946,39 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "Verifica_Arquivos_Stage",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ADLBlob",
+						"type": "DatasetReference",
+						"parameters": {
+							"Directory": "/Inbox/Stage",
+							"Container": "storagemaster"
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobStorageReadSettings"
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings",
+						"skipLineCount": 0
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -1026,7 +1005,7 @@
 			}
 		},
 		"folder": {
-			"name": "ExecuçãoMestre/CURATED"
+			"name": "ExecuçãoMasterData/CURATED"
 		},
 		"annotations": []
 	},
