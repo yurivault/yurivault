@@ -223,11 +223,7 @@
 				"inputs": [
 					{
 						"referenceName": "Parquet",
-						"type": "DatasetReference",
-						"parameters": {
-							"Container": "storagemaster",
-							"Directory": "/Stage/"
-						}
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
