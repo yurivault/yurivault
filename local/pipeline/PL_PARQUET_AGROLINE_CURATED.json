@@ -1,9 +1,1034 @@
 {
 	"name": "PL_PARQUET_AGROLINE_CURATED",
 	"properties": {
+		"activities": [
+			{
+				"name": "Verifica_Arquivos_Stage",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings",
+						"skipLineCount": 0
+					}
+				}
+			},
+			{
+				"name": "Trata Varios Arquivos Comissao",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Verifica_Arquivos_Stage",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Verifica_Arquivos_Stage').output.childitems",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"batchCount": 10,
+					"activities": [
+						{
+							"name": "PreencheVariavel NomeArquivo",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Insere Log Inicio",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "NomeArquivo",
+								"value": {
+									"value": "@{item().name}",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Dropa External Table",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "PreencheVariavel NomeArquivo",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_DropExternalTable]",
+								"storedProcedureParameters": {
+									"NomeTabela": {
+										"value": {
+											"value": "@concat(item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Cria External Table WizData",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Dropa External Table WizData",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_CriaExternalTable]",
+								"storedProcedureParameters": {
+									"campos": {
+										"value": {
+											"value": "@pipeline().parameters.ColunasOrigem",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@concat('/STAGE',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"NomeTabela": {
+										"value": {
+											"value": "@concat('[dbo].[',item().name,'2]')",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Dropa External Table WizData Final",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Insere Fato Comissao",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								},
+								{
+									"activity": "InsereContrato",
+									"dependencyConditions": [
+										"Completed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_DropExternalTable]",
+								"storedProcedureParameters": {
+									"NomeTabela": {
+										"value": {
+											"value": "@concat(item().name,'2')",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Carrega Fato Comissao",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "PL_DELIMITADO_DELIVERY",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_CarregaComissao]",
+								"storedProcedureParameters": {
+									"NomeTabela": {
+										"value": {
+											"value": "@concat(item().name,'2')",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Dropa External Table WizData",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Cria External Table",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_DropExternalTable]",
+								"storedProcedureParameters": {
+									"NomeTabela": {
+										"value": {
+											"value": "@concat(item().name,'2')",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Dropa Table WizData Final",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Dropa External Table Final",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_DropTable]",
+								"storedProcedureParameters": {
+									"NomeTabela": {
+										"value": {
+											"value": "@concat(item().name,'2CARGA')",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Insere Log Inicio",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Verifica Arquivo foi processado",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+								"storedProcedureParameters": {
+									"NomePipeline": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Camada": {
+										"value": {
+											"value": "DW",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": {
+											"value": "Em Processamento",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Detalhe": {
+										"value": {
+											"value": "Processando Arquivo",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"isUpdate": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaFinal": {
+										"value": null,
+										"type": "String"
+									},
+									"TamanhoArquivoIni": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasIni": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoFim": {
+										"value": null,
+										"type": "String"
+									},
+									"QtdLinhasFim": {
+										"value": null,
+										"type": "String"
+									},
+									"QtdLinhasRej": {
+										"value": null,
+										"type": "String"
+									},
+									"HierarquiaInicial": {
+										"value": {
+											"value": "@concat('STAGE',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Verifica Arquivo foi processado",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "DECLARE @A varchar(30)\n\nselect top 1 @A=tmp.A --as Prosseguir  \nFROM\n(\n\tSELECT 'N' as A\n\tfrom dbo.logprocessamento with(nolock)\n\twhere NomeArquivo = '@{item().name}'\n\tand (Status = 'Sucesso' or (Status = 'Em Processamento' and datediff(hour,DataInicio,getdate()) <= 4 ))\n\tand Camada = 'DW'\n\tUNION ALL\n\tSELECT 'S' as A\n) tmp\norder by A\n\nIF @A = 'N'\nBEGIN\n\tRAISERROR ('Arquivo Já Processado',16,1)\nEND\nELSE\nBEGIN\n\tSELECT 'S' as Prosseguir\nEND",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "Atualiza Log Sucesso",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Dropa Table WizData Final",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+								"storedProcedureParameters": {
+									"NomePipeline": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Camada": {
+										"value": {
+											"value": "DW",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": {
+											"value": "Sucesso",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Detalhe": {
+										"value": {
+											"value": "Dados enviado para CURATED com Sucesso",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"isUpdate": {
+										"value": {
+											"value": "1",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaFinal": {
+										"value": {
+											"value": "@concat('WizData.FAT_COMIZ_WIZ')",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoIni": {
+										"value": {
+											"value": "@activity('InsereContrato').output.dataRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoFim": {
+										"value": {
+											"value": "@activity('InsereContrato').output.dataWritten",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasIni": {
+										"value": {
+											"value": "@activity('InsereContrato').output.rowsRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasFim": {
+										"value": {
+											"value": "@activity('InsereContrato').output.rowsCopied",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasRej": {
+										"value": {
+											"value": "@activity('InsereContrato').output.rowsSkipped",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaInicial": {
+										"value": null,
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Atualiza Log Falha",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Dropa Table WizData Final",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+								"storedProcedureParameters": {
+									"NomePipeline": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Camada": {
+										"value": {
+											"value": "DW",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": {
+											"value": "Falha",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Detalhe": {
+										"value": {
+											"value": "Falha na conversão do arquivo",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"isUpdate": {
+										"value": {
+											"value": "1",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaFinal": {
+										"value": {
+											"value": "@concat('STAGE',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoIni": {
+										"value": {
+											"value": "@activity('InsereContrato').output.dataRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoFim": {
+										"value": {
+											"value": "@activity('InsereContrato').output.dataWritten",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasIni": {
+										"value": {
+											"value": "@activity('InsereContrato').output.rowsRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasFim": {
+										"value": {
+											"value": "@activity('InsereContrato').output.rowsCopied",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasRej": {
+										"value": {
+											"value": "@activity('InsereContrato').output.rowsSkipped",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaInicial": {
+										"value": null,
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Atualiza Log Falha Criacao Tabela Externa",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Carrega Fato Comissao",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+								"storedProcedureParameters": {
+									"NomePipeline": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Camada": {
+										"value": {
+											"value": "DW",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": {
+											"value": "Falha",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Detalhe": {
+										"value": {
+											"value": "@concat('Falha no arquivo, Pipeline Rund ID: ',pipeline().RunId)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"isUpdate": {
+										"value": {
+											"value": "1",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaFinal": {
+										"value": {
+											"value": "@concat('STAGE',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoIni": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoFim": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasIni": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasFim": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasRej": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaInicial": {
+										"value": null,
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "InsereContrato",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Carrega Fato Comissao",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "SqlDWSource",
+									"sqlReaderQuery": {
+										"value": "@replace(concat('SELECT\n\tCASE WHEN LEFT(C.NumeroProposta,2) = |0| THEN RIGHT(|000000000000000| + C.NumeroProposta,15) ELSE C.NumeroProposta END AS NumeroProposta\n\t,CASE WHEN LEFT(C.NumeroProposta,2) = |0| THEN RIGHT(|000000000000000| + C.NumeroProposta,15) ELSE C.NumeroProposta END AS Code\n\t,c.NumeroContrato NumeroContrato\n\t,C.CODIGOPONTOVENDA UnidadeVenda\n\t,case when try_cast(c.CodigoProduto as int) = 0 then null ELSE try_cast(c.CodigoProduto as int) end codigoProduto\n\t,[ValorBase] as ValorParcela\t\n\t,CASE WHEN NumeroParcela in (0,1) THEN cast(C.DATACALCULO as date) ELSE NULL  END DataEmissao\n\t,Max(NumeroParcela) NumeroParcela\n\t,CodigoRamoFracionado\n\t,CASE SUBSTRING(|',item().name,'|,22,3) \n\t\tWHEN 126 THEN |Corporate|\n\t\telse NULL END AS [CanalVenda]\n\t,|DC0701COMIS| Origem\n\t,getdate() DataGravacao\nFROM [dbo].[',item().name,'2CARGA] C\nwhere ISNULL(try_cast(C.NumeroProposta as bigint),0)<>0\ngroup by CASE WHEN LEFT(C.NumeroProposta,2) = |0| THEN RIGHT(|000000000000000| + C.NumeroProposta,15) ELSE C.NumeroProposta END\n\t,C.CODIGOPONTOVENDA\n\t,try_cast(c.CodigoProduto as int)\n\t,[ValorBase]\n\t,ISNULL(c.NumeroBilhete,-7)\n\t,CASE WHEN NumeroParcela in (0,1) THEN cast(C.DATACALCULO as date) ELSE NULL  END\n\t,CodigoRamoFracionado\n\t,c.NumeroContrato'),'|','''')",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "SqlDWSink"
+								},
+								"enableStaging": false,
+								"enableSkipIncompatibleRow": true,
+								"dataIntegrationUnits": 2
+							}
+						},
+						{
+							"name": "Insere Fato Comissao",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Carrega Fato Comissao",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_CarregaFatoComissao]",
+								"storedProcedureParameters": {
+									"NomeTabela": {
+										"value": {
+											"value": "@concat(item().name,'2Carga')",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "PL_DELIMITADO_DELIVERY",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Cria External Table WizData",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"waitOnCompletion": true,
+								"parameters": {
+									"Ano": {
+										"value": "@pipeline().parameters.Ano",
+										"type": "Expression"
+									},
+									"Mes": {
+										"value": "@pipeline().parameters.Mes",
+										"type": "Expression"
+									},
+									"Dia": {
+										"value": "@pipeline().parameters.Dia",
+										"type": "Expression"
+									},
+									"Hierarquia": {
+										"value": "@pipeline().parameters.Hierarquia",
+										"type": "Expression"
+									},
+									"Delimitador": ";",
+									"NomeArquivo": {
+										"value": "@{item().name}",
+										"type": "Expression"
+									}
+								}
+							}
+						},
+						{
+							"name": "Cria External Table",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Dropa External Table",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_CriaExternalTable]",
+								"storedProcedureParameters": {
+									"campos": {
+										"value": {
+											"value": "@pipeline().parameters.ColunasOrigem",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@concat('/STAGE',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"NomeTabela": {
+										"value": {
+											"value": "@concat('[dbo].[',item().name,']')",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Dropa External Table Final",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Dropa External Table WizData Final",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_DropExternalTable]",
+								"storedProcedureParameters": {
+									"NomeTabela": {
+										"value": {
+											"value": "@concat(item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Dropa Table WizData Final_copy1",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Atualiza Log Falha Criacao Tabela Externa",
+									"dependencyConditions": [
+										"Completed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_DropTable]",
+								"storedProcedureParameters": {
+									"NomeTabela": {
+										"value": {
+											"value": "@concat(item().name,'2CARGA')",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Dropa Table WizData Final_copy1_copy1",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Atualiza Log Falha",
+									"dependencyConditions": [
+										"Completed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_DropTable]",
+								"storedProcedureParameters": {
+									"NomeTabela": {
+										"value": {
+											"value": "@concat(item().name,'2CARGA')",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"Ano": {
+				"type": "string",
+				"defaultValue": "2022"
+			},
+			"Mes": {
+				"type": "string",
+				"defaultValue": "05"
+			},
+			"Dia": {
+				"type": "string",
+				"defaultValue": "26"
+			},
+			"Hierarquia": {
+				"type": "string",
+				"defaultValue": "/Stage/"
+			}
+		},
+		"variables": {
+			"NomeArquivo": {
+				"type": "String"
+			}
+		},
 		"folder": {
-			"name": "ExecuçãoMasterData/CURATED"
+			"name": "ExecuçãoMestre/CURATED"
 		},
 		"annotations": []
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
 }
