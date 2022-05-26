@@ -22,7 +22,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"folderPath": "Inbox",
+				"folderPath": "Stage",
 				"container": "storagemaster"
 			},
 			"compressionCodec": "snappy"
