@@ -17,7 +17,11 @@
 				"typeProperties": {
 					"dataset": {
 						"referenceName": "ADLBlob",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Directory": "/Inbox",
+							"Container": "storagemaster"
+						}
 					},
 					"fieldList": [],
 					"storeSettings": {
