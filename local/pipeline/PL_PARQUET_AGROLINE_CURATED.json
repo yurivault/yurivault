@@ -342,10 +342,7 @@
 										"type": "String"
 									},
 									"HierarquiaInicial": {
-										"value": {
-											"value": "@concat('STAGE',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
-											"type": "Expression"
-										},
+										"value": null,
 										"type": "String"
 									}
 								}
