@@ -9,12 +9,6 @@
 			"Container": {
 				"type": "string",
 				"defaultValue": "storagemaster"
-			},
-			"FileName": {
-				"type": "string"
-			},
-			"Directory": {
-				"type": "string"
 			}
 		},
 		"annotations": [],
