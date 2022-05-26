@@ -1,0 +1,77 @@
+{
+	"name": "AzureSqlTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Descricao",
+				"type": "varchar"
+			},
+			{
+				"name": "Codigo",
+				"type": "varchar"
+			},
+			{
+				"name": "Qtde",
+				"type": "varchar"
+			},
+			{
+				"name": "VdaBruta",
+				"type": "varchar"
+			},
+			{
+				"name": "MediaUm",
+				"type": "varchar"
+			},
+			{
+				"name": "ICMS",
+				"type": "varchar"
+			},
+			{
+				"name": "PisConfins",
+				"type": "varchar"
+			},
+			{
+				"name": "Outros",
+				"type": "varchar"
+			},
+			{
+				"name": "Custo",
+				"type": "varchar"
+			},
+			{
+				"name": "Frete",
+				"type": "varchar"
+			},
+			{
+				"name": "DespAces",
+				"type": "varchar"
+			},
+			{
+				"name": "Comissao",
+				"type": "varchar"
+			},
+			{
+				"name": "LucroBruto",
+				"type": "varchar"
+			},
+			{
+				"name": "PercLucro",
+				"type": "varchar"
+			},
+			{
+				"name": "PercVenda",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "fato_relatorio"
+		}
+	}
+}
