@@ -5,6 +5,16 @@
 			"referenceName": "AzureDataLakeExecAgroline",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"Directory": {
+				"type": "string",
+				"defaultValue": "Inbox"
+			},
+			"Container": {
+				"type": "string",
+				"defaultValue": "storagemaster"
+			}
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {

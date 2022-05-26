@@ -15,12 +15,13 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"fieldList": [
-						"childItems"
-					],
+					"dataset": {
+						"referenceName": "ADLBlob",
+						"type": "DatasetReference"
+					},
+					"fieldList": [],
 					"storeSettings": {
-						"type": "AzureBlobFSReadSettings",
-						"recursive": true
+						"type": "AzureBlobStorageReadSettings"
 					},
 					"formatSettings": {
 						"type": "DelimitedTextReadSettings",
@@ -492,7 +493,8 @@
 		],
 		"parameters": {
 			"Ano": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "2022"
 			},
 			"Mes": {
 				"type": "string"
