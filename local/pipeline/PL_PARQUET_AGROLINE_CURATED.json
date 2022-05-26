@@ -1,0 +1,9 @@
+{
+	"name": "PL_PARQUET_AGROLINE_CURATED",
+	"properties": {
+		"folder": {
+			"name": "ExecuçãoMasterData/CURATED"
+		},
+		"annotations": []
+	}
+}
