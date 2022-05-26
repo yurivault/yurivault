@@ -199,10 +199,7 @@
 								"storedProcedureName": "[WizData].[proc_CriaExternalTable]",
 								"storedProcedureParameters": {
 									"campos": {
-										"value": {
-											"value": "@pipeline().parameters.ColunasOrigem",
-											"type": "Expression"
-										},
+										"value": "Descricao varchar(250),\nCodigo varchar(250),\nQtde varchar(250),\nVdaBruta varchar(250),\nMediaUn varchar(250),\nICSMS varchar(250),\nPisConfins varchar(250),\nOutros varchar(250),\nCusto varchar(250),\nFrete varchar(250),\nDespAces varchar(250),\nComissao varchar(250),\nLucro varchar(250),\nPercLucro varchar(250),\nPercVenda varchar(250)",
 										"type": "String"
 									},
 									"nomearquivo": {
