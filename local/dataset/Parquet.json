@@ -2,7 +2,7 @@
 	"name": "Parquet",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureDataLakeStorage1",
+			"referenceName": "AzureDataLakeExecAgroline",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
@@ -21,13 +21,9 @@
 		"type": "Parquet",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobFSLocation",
-				"fileName": {
-					"value": "@dataset().FileName",
-					"type": "Expression"
-				},
+				"type": "AzureBlobStorageLocation",
 				"folderPath": "Inbox",
-				"fileSystem": "storagemaster"
+				"container": "storagemaster"
 			},
 			"compressionCodec": "snappy"
 		},
