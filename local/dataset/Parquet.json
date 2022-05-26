@@ -5,12 +5,6 @@
 			"referenceName": "AzureDataLakeExecAgroline",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"Container": {
-				"type": "string",
-				"defaultValue": "storagemaster"
-			}
-		},
 		"annotations": [],
 		"type": "Parquet",
 		"typeProperties": {
