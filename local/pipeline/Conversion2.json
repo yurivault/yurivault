@@ -126,41 +126,30 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"fieldList": [
-									"structure"
-								],
+								"dataset": {
+									"referenceName": "Delimitedtext1",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"Directory": "Inbox",
+										"Container": "storagemaster",
+										"Delimitador": ";",
+										"Encoding": "UTF-8",
+										"Compressao": "none",
+										"QuoteCharacter": " "
+									}
+								},
+								"fieldList": [],
 								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true
+									"type": "AzureBlobStorageReadSettings",
+									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
 									"type": "DelimitedTextReadSettings"
 								}
-							}
-						},
-						{
-							"name": "Verifica Arquivo foi processado",
-							"type": "Lookup",
-							"dependsOn": [],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderQuery": {
-										"value": "DECLARE @A varchar(30)\n\nselect top 1 @A=tmp.A --as Prosseguir  \nFROM\n(\n\tSELECT 'N' as A\n\tfrom dbo.logprocessamento with(nolock)\n\twhere NomeArquivo = '@{item().name}'\n\tand Status = 'Sucesso' \n\tand Camada = 'STAGE'\n\tUNION ALL\n\tSELECT 'S' as A\n) tmp\norder by A\n\nIF @A = 'S'\nBEGIN\n\tRAISERROR ('Necessita Processamento',16,1)\nEND\nELSE\nBEGIN\n\tSELECT 'N' as NecessitaProcessamento\nEND",
-										"type": "Expression"
-									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"firstRowOnly": false
 							}
 						},
 						{
@@ -392,14 +381,7 @@
 						{
 							"name": "Insere Log Inicio",
 							"type": "SqlServerStoredProcedure",
-							"dependsOn": [
-								{
-									"activity": "Verifica Arquivo foi processado",
-									"dependencyConditions": [
-										"Failed"
-									]
-								}
-							],
+							"dependsOn": [],
 							"policy": {
 								"timeout": "7.00:00:00",
 								"retry": 0,
@@ -409,7 +391,6 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
 								"storedProcedureParameters": {
 									"NomePipeline": {
 										"value": {
@@ -484,13 +465,14 @@
 										"type": "String"
 									},
 									"HierarquiaInicial": {
-										"value": {
-											"value": "@concat('RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
-											"type": "Expression"
-										},
+										"value": null,
 										"type": "String"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "AzureSqlDatabase1",
+								"type": "LinkedServiceReference"
 							}
 						}
 					]
