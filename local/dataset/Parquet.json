@@ -11,8 +11,10 @@
 				"defaultValue": "storagemaster"
 			},
 			"FileName": {
-				"type": "string",
-				"defaultValue": "@{item().name}"
+				"type": "string"
+			},
+			"Directory": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
