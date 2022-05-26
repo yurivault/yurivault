@@ -77,7 +77,7 @@
 								"source": {
 									"type": "DelimitedTextSource",
 									"storeSettings": {
-										"type": "AzureBlobFSReadSettings",
+										"type": "AzureBlobStorageReadSettings",
 										"recursive": true
 									},
 									"formatSettings": {
@@ -104,7 +104,36 @@
 									"value": "@activity('Recupera a Estrutura').output.Structure",
 									"type": "Expression"
 								}
-							}
+							},
+							"inputs": [
+								{
+									"referenceName": "Delimitedtext1",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": "@{item().name}",
+										"Directory": "Inbox",
+										"Container": "storagemaster",
+										"Delimitador": ";",
+										"Encoding": "UTF-8",
+										"Compressao": "none",
+										"QuoteCharacter": " "
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Parquet",
+									"type": "DatasetReference",
+									"parameters": {
+										"Container": "storagemaster",
+										"FileName": {
+											"value": "@replace(replace(replace(toLower(item().name),'.csv','.parquet'),'.txt','.parquet'),'.zip','.parquet')",
+											"type": "Expression"
+										},
+										"Directory": "Inbox"
+									}
+								}
+							]
 						},
 						{
 							"name": "Recupera a Estrutura",
@@ -142,239 +171,15 @@
 										"QuoteCharacter": " "
 									}
 								},
-								"fieldList": [],
+								"fieldList": [
+									"structure"
+								],
 								"storeSettings": {
 									"type": "AzureBlobStorageReadSettings",
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
 									"type": "DelimitedTextReadSettings"
-								}
-							}
-						},
-						{
-							"name": "Atualiza Log Sucesso",
-							"type": "SqlServerStoredProcedure",
-							"dependsOn": [
-								{
-									"activity": "Converte Arquivos para Parquet",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
-								"storedProcedureParameters": {
-									"NomePipeline": {
-										"value": {
-											"value": "@pipeline().Pipeline",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"Camada": {
-										"value": {
-											"value": "STAGE",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"nomearquivo": {
-										"value": {
-											"value": "@{item().name}",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"Status": {
-										"value": {
-											"value": "Sucesso",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"Detalhe": {
-										"value": {
-											"value": "Dados enviado para STAGE com Sucesso",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"isUpdate": {
-										"value": {
-											"value": "1",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"HierarquiaFinal": {
-										"value": {
-											"value": "@concat('STAGE',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"TamanhoArquivoIni": {
-										"value": {
-											"value": "@activity('Converte Arquivos para Parquet').output.dataRead",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"TamanhoArquivoFim": {
-										"value": {
-											"value": "@activity('Converte Arquivos para Parquet').output.dataWritten",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"QtdLinhasIni": {
-										"value": {
-											"value": "@activity('Converte Arquivos para Parquet').output.rowsRead",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"QtdLinhasFim": {
-										"value": {
-											"value": "@activity('Converte Arquivos para Parquet').output.rowsCopied",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"QtdLinhasRej": {
-										"value": {
-											"value": "@activity('Converte Arquivos para Parquet').output.rowsSkipped",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"HierarquiaInicial": {
-										"value": null,
-										"type": "String"
-									}
-								}
-							}
-						},
-						{
-							"name": "Atualiza Log Falha",
-							"type": "SqlServerStoredProcedure",
-							"dependsOn": [
-								{
-									"activity": "Converte Arquivos para Parquet",
-									"dependencyConditions": [
-										"Failed"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
-								"storedProcedureParameters": {
-									"NomePipeline": {
-										"value": {
-											"value": "@pipeline().Pipeline",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"Camada": {
-										"value": {
-											"value": "STAGE",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"nomearquivo": {
-										"value": {
-											"value": "@{item().name}",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"Status": {
-										"value": {
-											"value": "Falha",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"Detalhe": {
-										"value": {
-											"value": "Falha na conversão do arquivo",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"isUpdate": {
-										"value": {
-											"value": "1",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"HierarquiaFinal": {
-										"value": {
-											"value": "@concat('RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"TamanhoArquivoIni": {
-										"value": {
-											"value": "@activity('Converte Arquivos para Parquet').output.dataRead",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"TamanhoArquivoFim": {
-										"value": {
-											"value": "@activity('Converte Arquivos para Parquet').output.dataWritten",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"QtdLinhasIni": {
-										"value": {
-											"value": "@activity('Converte Arquivos para Parquet').output.rowsRead",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"QtdLinhasFim": {
-										"value": {
-											"value": "@activity('Converte Arquivos para Parquet').output.rowsCopied",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"QtdLinhasRej": {
-										"value": {
-											"value": "@activity('Converte Arquivos para Parquet').output.rowsSkipped",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"HierarquiaInicial": {
-										"value": null,
-										"type": "String"
-									}
 								}
 							}
 						},
@@ -391,6 +196,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
 								"storedProcedureParameters": {
 									"NomePipeline": {
 										"value": {
