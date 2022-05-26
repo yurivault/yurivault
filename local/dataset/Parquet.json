@@ -16,6 +16,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": "teste1.parquet",
 				"folderPath": "Stage",
 				"container": "storagemaster"
 			},
