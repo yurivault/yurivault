@@ -237,6 +237,12 @@
 				]
 			}
 		],
+		"parameters": {
+			"Directory": {
+				"type": "string",
+				"defaultValue": "/Stage/"
+			}
+		},
 		"folder": {
 			"name": "ExecuçãoMasterData/CURATED"
 		},
