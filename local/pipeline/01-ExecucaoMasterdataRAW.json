@@ -403,7 +403,9 @@
 													"Container": "storagemaster"
 												}
 											},
-											"fieldList": [],
+											"fieldList": [
+												"size"
+											],
 											"storeSettings": {
 												"type": "AzureBlobStorageReadSettings"
 											},
