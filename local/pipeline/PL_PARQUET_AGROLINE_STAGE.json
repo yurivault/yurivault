@@ -27,7 +27,8 @@
 						"childItems"
 					],
 					"storeSettings": {
-						"type": "AzureBlobStorageReadSettings"
+						"type": "AzureBlobStorageReadSettings",
+						"recursive": true
 					},
 					"formatSettings": {
 						"type": "DelimitedTextReadSettings",
@@ -185,6 +186,7 @@
 								],
 								"storeSettings": {
 									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -310,26 +312,6 @@
 			"Hierarquia": {
 				"type": "string",
 				"defaultValue": "/Inbox/"
-			},
-			"Delimitador": {
-				"type": "string",
-				"defaultValue": ";"
-			},
-			"RowsToSkip": {
-				"type": "int",
-				"defaultValue": 0
-			},
-			"Encoding": {
-				"type": "string",
-				"defaultValue": "UTF-8"
-			},
-			"TipoCompressao": {
-				"type": "string",
-				"defaultValue": "none"
-			},
-			"QuoteCharacter": {
-				"type": "string",
-				"defaultValue": " "
 			}
 		},
 		"variables": {
