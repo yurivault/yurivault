@@ -1,9 +1,1001 @@
 {
 	"name": "01-ExecucaoMasterdataRAW",
 	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Verifica_Arquivos_DataLake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Verifica_Arquivos_DataLake').output.childitems",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"batchCount": 10,
+					"activities": [
+						{
+							"name": "RecuperaSize",
+							"type": "GetMetadata",
+							"dependsOn": [
+								{
+									"activity": "Reprocessamento Arquivo",
+									"dependencyConditions": [
+										"Completed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"fieldList": [
+									"size"
+								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							}
+						},
+						{
+							"name": "VerificaSeArquivoVazio",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "RecuperaSize",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@and(or(equals(activity('RecuperaSize').output.size,0),contains(toLower(item().name),'.xls')),not(contains(toUpper(item().name),'PARC_COMIS')))",
+									"type": "Expression"
+								},
+								"ifFalseActivities": [
+									{
+										"name": "Insere Log Inicio",
+										"type": "SqlServerStoredProcedure",
+										"dependsOn": [
+											{
+												"activity": "Verifica Arquivo foi processado_copy1",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+											"storedProcedureParameters": {
+												"NomePipeline": {
+													"value": {
+														"value": "@pipeline().Pipeline",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Camada": {
+													"value": {
+														"value": "RAW",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"nomearquivo": {
+													"value": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Status": {
+													"value": {
+														"value": "Em Processamento",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Detalhe": {
+													"value": {
+														"value": "Processando Arquivo",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"isUpdate": {
+													"value": {
+														"value": "0",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"HierarquiaFinal": {
+													"value": null,
+													"type": "String"
+												},
+												"TamanhoArquivoIni": {
+													"value": {
+														"value": "0",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"QtdLinhasIni": {
+													"value": {
+														"value": "0",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"TamanhoArquivoFim": {
+													"value": null,
+													"type": "String"
+												},
+												"QtdLinhasFim": {
+													"value": null,
+													"type": "String"
+												},
+												"QtdLinhasRej": {
+													"value": null,
+													"type": "String"
+												},
+												"HierarquiaInicial": {
+													"value": {
+														"value": "@concat('INBOX/',item().name)",
+														"type": "Expression"
+													},
+													"type": "String"
+												}
+											}
+										}
+									},
+									{
+										"name": "Verifica Arquivo foi processado_copy1",
+										"type": "Lookup",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": {
+													"value": "DECLARE @A varchar(30)\n\nselect top 1 @A=tmp.A --as Prosseguir  \nFROM\n(\n\tSELECT 'N' as A\n\tfrom dbo.logprocessamento with(nolock)\n\twhere NomeArquivo = '@{item().name}'\n\tand Status = 'Sucesso' \n\tand Camada = 'RAW'\n\tUNION ALL\n\tSELECT 'S' as A\n) tmp\norder by A\n\nIF @A = 'N'\nBEGIN\n\tRAISERROR ('Arquivo Já Processado',16,1)\nEND\nELSE\nBEGIN\n\tSELECT 'S' as Prosseguir\nEND",
+													"type": "Expression"
+												},
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"firstRowOnly": false
+										}
+									},
+									{
+										"name": "DeletaArquivosINBOX_3_copy1",
+										"type": "Delete",
+										"dependsOn": [
+											{
+												"activity": "Verifica Arquivo foi processado_copy1",
+												"dependencyConditions": [
+													"Failed"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"enableLogging": false,
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true
+											}
+										}
+									},
+									{
+										"name": "VerificaParametrizacao",
+										"type": "Lookup",
+										"dependsOn": [
+											{
+												"activity": "Insere Log Inicio",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": true,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "AzureSqlSource",
+												"sqlReaderQuery": {
+													"value": "select Hierarquia from dbo.parametrizacao where '@{item().name}' like nome ",
+													"type": "Expression"
+												},
+												"queryTimeout": "02:00:00",
+												"partitionOption": "None"
+											},
+											"dataset": {
+												"referenceName": "Parametrizacao",
+												"type": "DatasetReference"
+											},
+											"firstRowOnly": true
+										}
+									},
+									{
+										"name": "Copia para RAW",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "Get Metadata2",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "DelimitedTextSource",
+												"storeSettings": {
+													"type": "AzureBlobFSReadSettings",
+													"recursive": true
+												},
+												"formatSettings": {
+													"type": "DelimitedTextReadSettings"
+												}
+											},
+											"sink": {
+												"type": "DelimitedTextSink",
+												"storeSettings": {
+													"type": "AzureBlobFSWriteSettings"
+												},
+												"formatSettings": {
+													"type": "DelimitedTextWriteSettings",
+													"quoteAllText": true,
+													"fileExtension": ".txt"
+												}
+											},
+											"enableStaging": false,
+											"dataIntegrationUnits": 2
+										}
+									},
+									{
+										"name": "Get Metadata2",
+										"type": "GetMetadata",
+										"dependsOn": [
+											{
+												"activity": "PreencheVariavel",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"fieldList": [
+												"size"
+											],
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										}
+									},
+									{
+										"name": "Copia para nao mapeado",
+										"type": "Copy",
+										"dependsOn": [
+											{
+												"activity": "PreencheVariavel",
+												"dependencyConditions": [
+													"Failed"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "DelimitedTextSource",
+												"storeSettings": {
+													"type": "AzureBlobFSReadSettings",
+													"recursive": true
+												},
+												"formatSettings": {
+													"type": "DelimitedTextReadSettings"
+												}
+											},
+											"sink": {
+												"type": "DelimitedTextSink",
+												"storeSettings": {
+													"type": "AzureBlobFSWriteSettings"
+												},
+												"formatSettings": {
+													"type": "DelimitedTextWriteSettings",
+													"quoteAllText": true,
+													"fileExtension": ".txt"
+												}
+											},
+											"enableStaging": false,
+											"dataIntegrationUnits": 2
+										}
+									},
+									{
+										"name": "Atualiza Stage",
+										"type": "SqlServerStoredProcedure",
+										"dependsOn": [
+											{
+												"activity": "Copia para RAW",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"storedProcedureName": "[WizData].[proc_AtualizaParametrizacao]",
+											"storedProcedureParameters": {
+												"campo": {
+													"value": "ProcessaStage",
+													"type": "String"
+												},
+												"NomeTabela": {
+													"value": "dbo.parametrizacao",
+													"type": "String"
+												},
+												"nomearquivo": {
+													"value": {
+														"value": "'@{item().name}'",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Status": {
+													"value": "'A Processar'",
+													"type": "String"
+												},
+												"isProcessed": {
+													"value": "1",
+													"type": "String"
+												},
+												"StatusColumn": {
+													"value": "StatusStage",
+													"type": "String"
+												}
+											}
+										}
+									},
+									{
+										"name": "Atualiza Log Sucesso",
+										"type": "SqlServerStoredProcedure",
+										"dependsOn": [
+											{
+												"activity": "Atualiza Stage",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+											"storedProcedureParameters": {
+												"NomePipeline": {
+													"value": {
+														"value": "@pipeline().Pipeline",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Camada": {
+													"value": {
+														"value": "RAW",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"nomearquivo": {
+													"value": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Status": {
+													"value": {
+														"value": "Sucesso",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Detalhe": {
+													"value": {
+														"value": "Dados enviado para RAW com Sucesso",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"isUpdate": {
+													"value": {
+														"value": "1",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"HierarquiaFinal": {
+													"value": {
+														"value": "@concat('RAW',activity('VerificaParametrizacao').output.firstRow.Hierarquia,activity('VerificaDiaHierarquia').output.firstRow.Ano,'/',activity('VerificaDiaHierarquia').output.firstRow.Mes,'/',activity('VerificaDiaHierarquia').output.firstRow.Dia,'/',item().name)",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"TamanhoArquivoIni": {
+													"value": {
+														"value": "@activity('Copia para RAW').output.dataRead",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"TamanhoArquivoFim": {
+													"value": {
+														"value": "@activity('Copia para RAW').output.dataWritten",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"QtdLinhasIni": {
+													"value": {
+														"value": "0",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"QtdLinhasFim": {
+													"value": {
+														"value": "0",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"QtdLinhasRej": {
+													"value": {
+														"value": "0",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"HierarquiaInicial": {
+													"value": null,
+													"type": "String"
+												}
+											}
+										}
+									},
+									{
+										"name": "Atualiza Log Falha",
+										"type": "SqlServerStoredProcedure",
+										"dependsOn": [
+											{
+												"activity": "Copia para nao mapeado",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+											"storedProcedureParameters": {
+												"NomePipeline": {
+													"value": {
+														"value": "@pipeline().Pipeline",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Camada": {
+													"value": {
+														"value": "RAW",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"nomearquivo": {
+													"value": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Status": {
+													"value": {
+														"value": "Falha",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Detalhe": {
+													"value": {
+														"value": "Arquivo não mapeado",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"isUpdate": {
+													"value": {
+														"value": "1",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"HierarquiaFinal": {
+													"value": {
+														"value": "@concat('UNMAPPED','/',item().name)",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"TamanhoArquivoIni": {
+													"value": {
+														"value": "@activity('Copia para nao mapeado').output.dataRead",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"TamanhoArquivoFim": {
+													"value": {
+														"value": "@activity('Copia para nao mapeado').output.dataWritten",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"QtdLinhasIni": {
+													"value": {
+														"value": "0",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"QtdLinhasFim": {
+													"value": {
+														"value": "0",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"QtdLinhasRej": {
+													"value": {
+														"value": "0",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"HierarquiaInicial": {
+													"value": null,
+													"type": "String"
+												}
+											}
+										}
+									},
+									{
+										"name": "PreencheVariavel",
+										"type": "SetVariable",
+										"dependsOn": [
+											{
+												"activity": "VerificaParametrizacao",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "temp",
+											"value": {
+												"value": "@activity('VerificaParametrizacao').output.firstRow.Hierarquia",
+												"type": "Expression"
+											}
+										}
+									},
+									{
+										"name": "DeletaArquivosINBOX",
+										"type": "Delete",
+										"dependsOn": [
+											{
+												"activity": "Atualiza Log Sucesso",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"enableLogging": false,
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true
+											}
+										}
+									},
+									{
+										"name": "DeletaArquivosINBOX_2",
+										"type": "Delete",
+										"dependsOn": [
+											{
+												"activity": "Atualiza Log Falha",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"enableLogging": false,
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true
+											}
+										}
+									}
+								],
+								"ifTrueActivities": [
+									{
+										"name": "DeletaArquivosINBOX_Vazio",
+										"type": "Delete",
+										"dependsOn": [
+											{
+												"activity": "insere Log Vazio",
+												"dependencyConditions": [
+													"Succeeded"
+												]
+											}
+										],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"enableLogging": false,
+											"storeSettings": {
+												"type": "AzureBlobFSReadSettings",
+												"recursive": true
+											}
+										}
+									},
+									{
+										"name": "insere Log Vazio",
+										"type": "SqlServerStoredProcedure",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "7.00:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+											"storedProcedureParameters": {
+												"NomePipeline": {
+													"value": {
+														"value": "@pipeline().Pipeline",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Camada": {
+													"value": {
+														"value": "RAW",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"nomearquivo": {
+													"value": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Status": {
+													"value": {
+														"value": "Falha",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"Detalhe": {
+													"value": {
+														"value": "Arquivo Vazio",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"isUpdate": {
+													"value": {
+														"value": "0",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"HierarquiaFinal": {
+													"value": {
+														"value": "0",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"TamanhoArquivoIni": {
+													"value": {
+														"value": "@activity('RecuperaSize').output.size",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"TamanhoArquivoFim": {
+													"value": {
+														"value": "@activity('RecuperaSize').output.size",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"QtdLinhasIni": {
+													"value": {
+														"value": "0",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"QtdLinhasFim": {
+													"value": {
+														"value": "0",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"QtdLinhasRej": {
+													"value": {
+														"value": "0",
+														"type": "Expression"
+													},
+													"type": "String"
+												},
+												"HierarquiaInicial": {
+													"value": {
+														"value": "@concat('INBOX/',item().name)",
+														"type": "Expression"
+													},
+													"type": "String"
+												}
+											}
+										}
+									}
+								]
+							}
+						},
+						{
+							"name": "Reprocessamento Arquivo",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_Reprocessamento]",
+								"storedProcedureParameters": {
+									"NomeArquivo": {
+										"value": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Verifica_Arquivos_DataLake",
+				"type": "GetMetadata",
+				"dependsOn": [
+					{
+						"activity": "PL_CONVERT_XLSXtoCSV_INBOX",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ADLBlob",
+						"type": "DatasetReference"
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings",
+						"skipLineCount": 0
+					}
+				}
+			},
+			{
+				"name": "VerificaDiaHierarquia",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select year(getdate()) as Ano,RIGHT('00'+cast(month(getdate()) as varchar),2) as Mes,RIGHT('00'+cast(day(getdate()) as varchar),2) as Dia",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "Parametrizacao",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "PL_CONVERT_XLSXtoCSV_INBOX",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "VerificaDiaHierarquia",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"variables": {
+			"temp": {
+				"type": "String",
+				"defaultValue": "0"
+			}
+		},
 		"folder": {
-			"name": "ExecuçãoMasterData/RAW"
+			"name": "ExecuçãoMestre"
 		},
 		"annotations": []
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
 }
