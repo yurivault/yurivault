@@ -1,0 +1,82 @@
+{
+	"name": "LogProcessamento",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "NomeArquivo",
+				"type": "varchar"
+			},
+			{
+				"name": "Status",
+				"type": "varchar"
+			},
+			{
+				"name": "Camada",
+				"type": "varchar"
+			},
+			{
+				"name": "DataInicio",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "DataFim",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "NomePipeline",
+				"type": "varchar"
+			},
+			{
+				"name": "HierarquiaInicial",
+				"type": "varchar"
+			},
+			{
+				"name": "HierarquiaFinal",
+				"type": "varchar"
+			},
+			{
+				"name": "TamanhoArquivoInicial",
+				"type": "varchar"
+			},
+			{
+				"name": "TamanhoArquivoFinal",
+				"type": "varchar"
+			},
+			{
+				"name": "QuantidadeLinhasInicial",
+				"type": "varchar"
+			},
+			{
+				"name": "QuantidadeLinhasFinal",
+				"type": "varchar"
+			},
+			{
+				"name": "QuantidadeLinhasRejeitadas",
+				"type": "varchar"
+			},
+			{
+				"name": "Detalhe",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "logProcessamento"
+		}
+	}
+}
