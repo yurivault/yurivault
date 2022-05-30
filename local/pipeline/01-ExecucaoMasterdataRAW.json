@@ -360,12 +360,21 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
-											"fieldList": [
-												"size"
-											],
+											"dataset": {
+												"referenceName": "ADLBlobArquivo",
+												"type": "DatasetReference",
+												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"Directory": "INBOX/",
+													"Container": "storagemaster"
+												}
+											},
+											"fieldList": [],
 											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
-												"recursive": true
+												"type": "AzureBlobStorageReadSettings"
 											},
 											"formatSettings": {
 												"type": "DelimitedTextReadSettings"
@@ -395,7 +404,7 @@
 											"source": {
 												"type": "DelimitedTextSource",
 												"storeSettings": {
-													"type": "AzureBlobFSReadSettings",
+													"type": "AzureBlobStorageReadSettings",
 													"recursive": true
 												},
 												"formatSettings": {
@@ -405,7 +414,7 @@
 											"sink": {
 												"type": "DelimitedTextSink",
 												"storeSettings": {
-													"type": "AzureBlobFSWriteSettings"
+													"type": "AzureBlobStorageWriteSettings"
 												},
 												"formatSettings": {
 													"type": "DelimitedTextWriteSettings",
@@ -415,7 +424,31 @@
 											},
 											"enableStaging": false,
 											"dataIntegrationUnits": 2
-										}
+										},
+										"inputs": [
+											{
+												"referenceName": "ADLBlobArquivo",
+												"type": "DatasetReference",
+												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"Directory": "INBOX/",
+													"Container": "storagemaster"
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "ADLBlobArquivo",
+												"type": "DatasetReference",
+												"parameters": {
+													"Directory": "UNMAPPED/",
+													"Container": "storagemaster"
+												}
+											}
+										]
 									},
 									{
 										"name": "Atualiza Stage",
