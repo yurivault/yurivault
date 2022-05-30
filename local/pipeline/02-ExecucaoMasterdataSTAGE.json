@@ -1,9 +1,352 @@
 {
 	"name": "02-ExecucaoMasterdataSTAGE",
 	"properties": {
+		"activities": [
+			{
+				"name": "Verifica a processar Stage",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "VerificaDiaHierarquia",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select Nome,Hierarquia,NomePipelineStage,NomePipelineCurated,Delimitador,RowsToSkip,CodificacaoArquivo,TipoCompressao, QuoteCharacter from dbo.parametrizacao where ProcessaStage = 1",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "Parametrizacao",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Percorre Array a carregar Stage",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Verifica a processar Stage",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Verifica a processar Stage').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"batchCount": 10,
+					"activities": [
+						{
+							"name": "Atualiza Stage",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "VerificaSwitch",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_AtualizaParametrizacao]",
+								"storedProcedureParameters": {
+									"campo": {
+										"value": "ProcessaStage",
+										"type": "String"
+									},
+									"NomeTabela": {
+										"value": "dbo.parametrizacao",
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "'@{item().Nome}'",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": "'Processado Com Sucesso'",
+										"type": "String"
+									},
+									"isProcessed": {
+										"value": "0",
+										"type": "String"
+									},
+									"StatusColumn": {
+										"value": "StatusStage",
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Atualiza Curated",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Atualiza Stage",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_AtualizaParametrizacao]",
+								"storedProcedureParameters": {
+									"campo": {
+										"value": "ProcessaCurated",
+										"type": "String"
+									},
+									"NomeTabela": {
+										"value": "dbo.parametrizacao",
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "'@{item().Nome}'",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"StatusColumn": {
+										"value": "StatusCurated",
+										"type": "String"
+									},
+									"isProcessed": {
+										"value": "1",
+										"type": "String"
+									},
+									"Status": {
+										"value": "'A Processar'",
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Atualiza Stage Falha",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "VerificaSwitch",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_AtualizaParametrizacao]",
+								"storedProcedureParameters": {
+									"campo": {
+										"value": "ProcessaStage",
+										"type": "String"
+									},
+									"NomeTabela": {
+										"value": "dbo.parametrizacao",
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "'@{item().Nome}'",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": "'Falha'",
+										"type": "String"
+									},
+									"isProcessed": {
+										"value": "0",
+										"type": "String"
+									},
+									"StatusColumn": {
+										"value": "StatusStage",
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Atualiza Processando",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_AtualizaParametrizacao]",
+								"storedProcedureParameters": {
+									"campo": {
+										"value": "ProcessaStage",
+										"type": "String"
+									},
+									"NomeTabela": {
+										"value": "dbo.parametrizacao",
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "'@{item().Nome}'",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": "'Processando'",
+										"type": "String"
+									},
+									"isProcessed": {
+										"value": "0",
+										"type": "String"
+									},
+									"StatusColumn": {
+										"value": "StatusStage",
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "VerificaSwitch",
+							"type": "ExecutePipeline",
+							"dependsOn": [
+								{
+									"activity": "Atualiza Processando",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"waitOnCompletion": true,
+								"parameters": {
+									"Ano": {
+										"value": "@activity('VerificaDiaHierarquia').output.firstRow.Ano",
+										"type": "Expression"
+									},
+									"Mes": {
+										"value": "@activity('VerificaDiaHierarquia').output.firstRow.Mes",
+										"type": "Expression"
+									},
+									"Dia": {
+										"value": "@activity('VerificaDiaHierarquia').output.firstRow.Dia",
+										"type": "Expression"
+									},
+									"Hierarquia": {
+										"value": "@{item().Hierarquia}",
+										"type": "Expression"
+									},
+									"Delimitador": {
+										"value": "@{item().Delimitador}",
+										"type": "Expression"
+									},
+									"RowsToSkip": {
+										"value": "@{item().RowsToSkip}",
+										"type": "Expression"
+									},
+									"Encoding": {
+										"value": "@{item().CodificacaoArquivo}",
+										"type": "Expression"
+									},
+									"TipoCompressao": {
+										"value": "@{item().TipoCompressao}",
+										"type": "Expression"
+									},
+									"QuoteCharacter": {
+										"value": "@item().QuoteCharacter",
+										"type": "Expression"
+									},
+									"Item": {
+										"value": "@{item().NomePipelineStage}",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "VerificaDiaHierarquia",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "select year(getdate()) as Ano,RIGHT('00'+cast(month(getdate()) as varchar),2) as Mes,RIGHT('00'+cast(day(getdate()) as varchar),2) as Dia",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "Parametrizacao",
+						"type": "DatasetReference"
+					}
+				}
+			}
+		],
 		"folder": {
-			"name": "ExecuçãoMasterData/STAGE"
+			"name": "ExecuçãoMestre"
 		},
 		"annotations": []
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
 }
