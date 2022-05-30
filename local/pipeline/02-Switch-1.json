@@ -1,0 +1,89 @@
+{
+	"name": "02-Switch-1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Switch1",
+				"type": "Switch",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"on": {
+						"value": "@pipeline().parameters.Item",
+						"type": "Expression"
+					},
+					"cases": [
+						{
+							"value": "PL_DELIMITADO_STAGE_BERKLEY",
+							"activities": [
+								{
+									"name": "PL_DELIMITADO_STAGE_BERKLEY",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"waitOnCompletion": true,
+										"parameters": {
+											"Ano": {
+												"value": "@pipeline().parameters.Ano",
+												"type": "Expression"
+											},
+											"Mes": {
+												"value": "@pipeline().parameters.Mes",
+												"type": "Expression"
+											},
+											"Dia": {
+												"value": "@pipeline().parameters.Dia",
+												"type": "Expression"
+											},
+											"Hierarquia": {
+												"value": "@pipeline().parameters.Hierarquia",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"Ano": {
+				"type": "string"
+			},
+			"Mes": {
+				"type": "string"
+			},
+			"Dia": {
+				"type": "string"
+			},
+			"Hierarquia": {
+				"type": "string"
+			},
+			"Delimitador": {
+				"type": "string"
+			},
+			"RowsToSkip": {
+				"type": "string"
+			},
+			"Encoding": {
+				"type": "string"
+			},
+			"TipoCompressao": {
+				"type": "string"
+			},
+			"QuoteCharacter": {
+				"type": "string"
+			},
+			"Item": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "ExecuçãoMestre"
+		},
+		"annotations": []
+	}
+}
