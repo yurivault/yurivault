@@ -1088,7 +1088,7 @@
 						"referenceName": "ADLBlob",
 						"type": "DatasetReference",
 						"parameters": {
-							"Directory": "Inbox",
+							"Directory": "INBOX",
 							"Container": "storagemaster"
 						}
 					},
