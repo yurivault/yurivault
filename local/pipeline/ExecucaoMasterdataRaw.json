@@ -1,0 +1,9 @@
+{
+	"name": "ExecucaoMasterdataRaw",
+	"properties": {
+		"folder": {
+			"name": "ExecuçãoMasterData/RAW"
+		},
+		"annotations": []
+	}
+}
