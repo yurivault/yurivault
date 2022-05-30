@@ -477,6 +477,10 @@
 												"referenceName": "ADLBlobArquivo",
 												"type": "DatasetReference",
 												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
 													"Directory": "UNMAPPED/",
 													"Container": "storagemaster"
 												}
@@ -897,6 +901,10 @@
 												"referenceName": "ADLBlobArquivo",
 												"type": "DatasetReference",
 												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
 													"Directory": "INBOX/",
 													"Container": "storagemaster"
 												}
