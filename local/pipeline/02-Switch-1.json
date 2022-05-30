@@ -14,14 +14,18 @@
 					},
 					"cases": [
 						{
-							"value": "PL_DELIMITADO_STAGE_BERKLEY",
+							"value": "PL_PARQUET_AGROLINE_STAGE",
 							"activities": [
 								{
-									"name": "PL_DELIMITADO_STAGE_BERKLEY",
+									"name": "PL_PARQUET_AGROLINE_STAGE",
 									"type": "ExecutePipeline",
 									"dependsOn": [],
 									"userProperties": [],
 									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_PARQUET_AGROLINE_STAGE",
+											"type": "PipelineReference"
+										},
 										"waitOnCompletion": true,
 										"parameters": {
 											"Ano": {
