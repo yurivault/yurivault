@@ -1,0 +1,45 @@
+{
+	"name": "ADLBlobArquivo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeExecAgroline",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"FileName": {
+				"type": "string"
+			},
+			"Directory": {
+				"type": "string",
+				"defaultValue": "INBOX/"
+			},
+			"Container": {
+				"type": "string",
+				"defaultValue": "storagemaster"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().FileName",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@dataset().Directory",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().Container",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": "\u0001",
+			"escapeChar": "",
+			"quoteChar": ""
+		},
+		"schema": []
+	}
+}
