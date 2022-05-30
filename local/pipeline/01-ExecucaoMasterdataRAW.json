@@ -318,7 +318,7 @@
 											"source": {
 												"type": "DelimitedTextSource",
 												"storeSettings": {
-													"type": "AzureBlobFSReadSettings",
+													"type": "AzureBlobStorageReadSettings",
 													"recursive": true
 												},
 												"formatSettings": {
@@ -328,7 +328,7 @@
 											"sink": {
 												"type": "DelimitedTextSink",
 												"storeSettings": {
-													"type": "AzureBlobFSWriteSettings"
+													"type": "AzureBlobStorageWriteSettings"
 												},
 												"formatSettings": {
 													"type": "DelimitedTextWriteSettings",
@@ -338,7 +338,38 @@
 											},
 											"enableStaging": false,
 											"dataIntegrationUnits": 2
-										}
+										},
+										"inputs": [
+											{
+												"referenceName": "ADLBlobArquivo",
+												"type": "DatasetReference",
+												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"Directory": "INBOX/",
+													"Container": "storagemaster"
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "ADLBlobArquivo",
+												"type": "DatasetReference",
+												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"Directory": {
+														"value": "@concat('RAW',activity('VerificaParametrizacao').output.firstRow.Hierarquia,activity('VerificaDiaHierarquia').output.firstRow.Ano,'/',activity('VerificaDiaHierarquia').output.firstRow.Mes,'/',activity('VerificaDiaHierarquia').output.firstRow.Dia)",
+														"type": "Expression"
+													},
+													"Container": "storagemaster"
+												}
+											}
+										]
 									},
 									{
 										"name": "Get Metadata2",
@@ -470,7 +501,7 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
-											"storedProcedureName": "[WizData].[proc_AtualizaParametrizacao]",
+											"storedProcedureName": "[dbo].[proc_AtualizaParametrizacao]",
 											"storedProcedureParameters": {
 												"campo": {
 													"value": "ProcessaStage",
@@ -500,6 +531,10 @@
 													"type": "String"
 												}
 											}
+										},
+										"linkedServiceName": {
+											"referenceName": "AzureSqlDatabase1",
+											"type": "LinkedServiceReference"
 										}
 									},
 									{
@@ -522,7 +557,7 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
-											"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+											"storedProcedureName": "[dbo].[proc_InsereLogProcessamento]",
 											"storedProcedureParameters": {
 												"NomePipeline": {
 													"value": {
@@ -613,6 +648,10 @@
 													"type": "String"
 												}
 											}
+										},
+										"linkedServiceName": {
+											"referenceName": "AzureSqlDatabase1",
+											"type": "LinkedServiceReference"
 										}
 									},
 									{
@@ -635,7 +674,7 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
-											"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+											"storedProcedureName": "[dbo].[proc_InsereLogProcessamento]",
 											"storedProcedureParameters": {
 												"NomePipeline": {
 													"value": {
@@ -726,6 +765,10 @@
 													"type": "String"
 												}
 											}
+										},
+										"linkedServiceName": {
+											"referenceName": "AzureSqlDatabase1",
+											"type": "LinkedServiceReference"
 										}
 									},
 									{
@@ -768,9 +811,21 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
+											"dataset": {
+												"referenceName": "ADLBlobArquivo",
+												"type": "DatasetReference",
+												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"Directory": "INBOX/",
+													"Container": "storagemaster"
+												}
+											},
 											"enableLogging": false,
 											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
+												"type": "AzureBlobStorageReadSettings",
 												"recursive": true
 											}
 										}
@@ -795,9 +850,21 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
+											"dataset": {
+												"referenceName": "ADLBlobArquivo",
+												"type": "DatasetReference",
+												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"Directory": "INBOX/",
+													"Container": "storagemaster"
+												}
+											},
 											"enableLogging": false,
 											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
+												"type": "AzureBlobStorageReadSettings",
 												"recursive": true
 											}
 										}
