@@ -209,6 +209,10 @@
 												"queryTimeout": "02:00:00",
 												"partitionOption": "None"
 											},
+											"dataset": {
+												"referenceName": "LogProcessamento",
+												"type": "DatasetReference"
+											},
 											"firstRowOnly": false
 										}
 									},
@@ -232,9 +236,21 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
+											"dataset": {
+												"referenceName": "ADLBlobArquivo",
+												"type": "DatasetReference",
+												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"Directory": "INBOX/",
+													"Container": "storagemaster"
+												}
+											},
 											"enableLogging": false,
 											"storeSettings": {
-												"type": "AzureBlobFSReadSettings",
+												"type": "AzureBlobStorageReadSettings",
 												"recursive": true
 											}
 										}
