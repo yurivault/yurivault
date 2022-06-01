@@ -51,12 +51,16 @@
 											"type": "Expression"
 										},
 										"Directory": "INBOX/",
-										"Container": "storagemaster"
+										"Container": "storagemasteragro"
 									}
 								},
 								"fieldList": [
 									"size"
 								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"enablePartitionDiscovery": false
+								},
 								"formatSettings": {
 									"type": "DelimitedTextReadSettings"
 								}
