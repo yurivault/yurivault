@@ -29,6 +29,11 @@
 					"fieldList": [
 						"childItems"
 					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
 					"formatSettings": {
 						"type": "DelimitedTextReadSettings",
 						"skipLineCount": 0
@@ -99,6 +104,23 @@
 								},
 								"enableStaging": false,
 								"enableSkipIncompatibleRow": true,
+								"logSettings": {
+									"enableCopyActivityLog": true,
+									"copyActivityLogSettings": {
+										"logLevel": "Warning",
+										"enableReliableLogging": false
+									},
+									"logLocationSettings": {
+										"linkedServiceName": {
+											"referenceName": "AzureDataLakeStorage1",
+											"type": "LinkedServiceReference"
+										},
+										"path": {
+											"value": "@concat('storagemaster','/','FAILURE','/',variables('NomeArquivo'))",
+											"type": "Expression"
+										}
+									}
+								},
 								"dataIntegrationUnits": 2,
 								"translator": {
 									"value": "@activity('Recupera a Estrutura').output.Structure",
