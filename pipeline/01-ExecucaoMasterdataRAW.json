@@ -878,6 +878,10 @@
 													"type": "String"
 												}
 											}
+										},
+										"linkedServiceName": {
+											"referenceName": "ConexaoBanco",
+											"type": "LinkedServiceReference"
 										}
 									}
 								]
