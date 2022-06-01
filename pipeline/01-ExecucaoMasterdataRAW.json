@@ -206,6 +206,10 @@
 												"queryTimeout": "02:00:00",
 												"partitionOption": "None"
 											},
+											"dataset": {
+												"referenceName": "LogProcessamento",
+												"type": "DatasetReference"
+											},
 											"firstRowOnly": false
 										}
 									},
@@ -229,6 +233,18 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
+											"dataset": {
+												"referenceName": "ADLBlobArquivo",
+												"type": "DatasetReference",
+												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"Directory": "INBOX/",
+													"Container": "storagemasteragro"
+												}
+											},
 											"enableLogging": false,
 											"storeSettings": {
 												"type": "AzureBlobStorageReadSettings",
@@ -265,6 +281,10 @@
 												"queryTimeout": "02:00:00",
 												"partitionOption": "None"
 											},
+											"dataset": {
+												"referenceName": "Parametrizacao",
+												"type": "DatasetReference"
+											},
 											"firstRowOnly": true
 										}
 									},
@@ -300,9 +320,6 @@
 											},
 											"sink": {
 												"type": "DelimitedTextSink",
-												"storeSettings": {
-													"type": "AzureBlobStorageWriteSettings"
-												},
 												"formatSettings": {
 													"type": "DelimitedTextWriteSettings",
 													"quoteAllText": true,
@@ -311,7 +328,35 @@
 											},
 											"enableStaging": false,
 											"dataIntegrationUnits": 2
-										}
+										},
+										"inputs": [
+											{
+												"referenceName": "ADLBlobArquivo",
+												"type": "DatasetReference",
+												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"Directory": "INBOX/",
+													"Container": "storagemasteragro"
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "ADLBlobArquivo",
+												"type": "DatasetReference",
+												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"Directory": "RAW/",
+													"Container": "storagemasteragro"
+												}
+											}
+										]
 									},
 									{
 										"name": "Get Metadata2",
@@ -333,13 +378,21 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
+											"dataset": {
+												"referenceName": "ADLBlobArquivo",
+												"type": "DatasetReference",
+												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"Directory": "INBOX/",
+													"Container": "storagemaster"
+												}
+											},
 											"fieldList": [
 												"size"
 											],
-											"storeSettings": {
-												"type": "AzureBlobStorageReadSettings",
-												"recursive": true
-											},
 											"formatSettings": {
 												"type": "DelimitedTextReadSettings"
 											}
@@ -377,9 +430,6 @@
 											},
 											"sink": {
 												"type": "DelimitedTextSink",
-												"storeSettings": {
-													"type": "AzureBlobStorageWriteSettings"
-												},
 												"formatSettings": {
 													"type": "DelimitedTextWriteSettings",
 													"quoteAllText": true,
@@ -388,7 +438,35 @@
 											},
 											"enableStaging": false,
 											"dataIntegrationUnits": 2
-										}
+										},
+										"inputs": [
+											{
+												"referenceName": "ADLBlobArquivo",
+												"type": "DatasetReference",
+												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"Directory": "INBOX/",
+													"Container": "storagemasteragro"
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "ADLBlobArquivo",
+												"type": "DatasetReference",
+												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"Directory": "UNMAPPED/",
+													"Container": "storagemasteragro"
+												}
+											}
+										]
 									},
 									{
 										"name": "Atualiza Stage",
@@ -440,6 +518,10 @@
 													"type": "String"
 												}
 											}
+										},
+										"linkedServiceName": {
+											"referenceName": "ConexaoBanco",
+											"type": "LinkedServiceReference"
 										}
 									},
 									{
@@ -553,6 +635,10 @@
 													"type": "String"
 												}
 											}
+										},
+										"linkedServiceName": {
+											"referenceName": "ConexaoBanco",
+											"type": "LinkedServiceReference"
 										}
 									},
 									{
@@ -666,6 +752,10 @@
 													"type": "String"
 												}
 											}
+										},
+										"linkedServiceName": {
+											"referenceName": "ConexaoBanco",
+											"type": "LinkedServiceReference"
 										}
 									},
 									{
@@ -708,6 +798,18 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
+											"dataset": {
+												"referenceName": "ADLBlobArquivo",
+												"type": "DatasetReference",
+												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"Directory": "INBOX/",
+													"Container": "storagemasteragro"
+												}
+											},
 											"enableLogging": false,
 											"storeSettings": {
 												"type": "AzureBlobStorageReadSettings",
@@ -735,6 +837,18 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
+											"dataset": {
+												"referenceName": "ADLBlobArquivo",
+												"type": "DatasetReference",
+												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"Directory": "INBOX/",
+													"Container": "storagemasteragro"
+												}
+											},
 											"enableLogging": false,
 											"storeSettings": {
 												"type": "AzureBlobStorageReadSettings",
