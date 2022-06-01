@@ -1,6 +1,10 @@
 {
 	"name": "Relatorio",
 	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ConexaoBanco",
+			"type": "LinkedServiceReference"
+		},
 		"annotations": [],
 		"type": "AzureSqlTable",
 		"schema": [
