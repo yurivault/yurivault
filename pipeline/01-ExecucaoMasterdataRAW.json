@@ -182,6 +182,10 @@
 													"type": "String"
 												}
 											}
+										},
+										"linkedServiceName": {
+											"referenceName": "ConexaoBanco",
+											"type": "LinkedServiceReference"
 										}
 									},
 									{
@@ -1076,6 +1080,11 @@
 					"fieldList": [
 						"childItems"
 					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
 					"formatSettings": {
 						"type": "DelimitedTextReadSettings",
 						"skipLineCount": 0
