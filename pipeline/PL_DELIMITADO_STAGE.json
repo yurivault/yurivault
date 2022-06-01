@@ -15,13 +15,20 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"dataset": {
+						"referenceName": "ADLBlob",
+						"type": "DatasetReference",
+						"parameters": {
+							"Directory": {
+								"value": "@concat('RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia)",
+								"type": "Expression"
+							},
+							"Container": "storagemasteragro"
+						}
+					},
 					"fieldList": [
 						"childItems"
 					],
-					"storeSettings": {
-						"type": "AzureBlobFSReadSettings",
-						"recursive": true
-					},
 					"formatSettings": {
 						"type": "DelimitedTextReadSettings",
 						"skipLineCount": 0
@@ -97,7 +104,54 @@
 									"value": "@activity('Recupera a Estrutura').output.Structure",
 									"type": "Expression"
 								}
-							}
+							},
+							"inputs": [
+								{
+									"referenceName": "ADLBlobArquivoDELIMITADOR",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"Directory": {
+											"value": "@concat('RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia)",
+											"type": "Expression"
+										},
+										"Container": "storagemasteragro",
+										"Delimitador": {
+											"value": "@pipeline().parameters.Delimitador",
+											"type": "Expression"
+										},
+										"Encoding": {
+											"value": "@pipeline().parameters.Encoding",
+											"type": "Expression"
+										},
+										"Compressao": {
+											"value": "@pipeline().parameters.TipoCompressao",
+											"type": "Expression"
+										},
+										"QuoteCharacter": " "
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ConversaoParquetNome",
+									"type": "DatasetReference",
+									"parameters": {
+										"Directory": {
+											"value": "@concat('STAGE',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia)",
+											"type": "Expression"
+										},
+										"Container": "storagemasteragro",
+										"FileName": {
+											"value": "@replace(replace(replace(toLower(item().name),'.csv','.parquet'),'.txt','.parquet'),'.zip','.parquet')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
 						},
 						{
 							"name": "Recupera a Estrutura",
@@ -119,12 +173,40 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
+								"dataset": {
+									"referenceName": "ADLBlobArquivoDELIMITADOR",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"Directory": {
+											"value": "@concat('RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia)",
+											"type": "Expression"
+										},
+										"Container": "storagemasteragro",
+										"Delimitador": {
+											"value": "@pipeline().parameters.Delimitador",
+											"type": "Expression"
+										},
+										"Encoding": {
+											"value": "@pipeline().parameters.Encoding",
+											"type": "Expression"
+										},
+										"Compressao": {
+											"value": "@pipeline().parameters.TipoCompressao",
+											"type": "Expression"
+										},
+										"QuoteCharacter": " "
+									}
+								},
 								"fieldList": [
 									"structure"
 								],
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
-									"recursive": true
+									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
 									"type": "DelimitedTextReadSettings"
@@ -180,7 +262,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+								"storedProcedureName": "[dbo].[proc_InsereLogProcessamento]",
 								"storedProcedureParameters": {
 									"NomePipeline": {
 										"value": {
@@ -271,6 +353,10 @@
 										"type": "String"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
 							}
 						},
 						{
@@ -293,7 +379,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+								"storedProcedureName": "[dbo].[proc_InsereLogProcessamento]",
 								"storedProcedureParameters": {
 									"NomePipeline": {
 										"value": {
@@ -384,6 +470,10 @@
 										"type": "String"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
 							}
 						},
 						{
@@ -488,6 +578,10 @@
 										"type": "String"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
 							}
 						}
 					]
