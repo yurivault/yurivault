@@ -14,53 +14,19 @@
 					},
 					"cases": [
 						{
-							"value": "PL_PARQUET_AGROLINE_STAGE",
+							"value": "PL_DELIMITADO_CURATED",
 							"activities": [
 								{
-									"name": "PL_PARQUET_AGROLINE_STAGE",
+									"name": "PL_DELIMITADO_CURATED",
 									"type": "ExecutePipeline",
 									"dependsOn": [],
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "PL_DELIMITADO_STAGE",
+											"referenceName": "PL_DELIMITADO_CURATED",
 											"type": "PipelineReference"
 										},
-										"waitOnCompletion": true,
-										"parameters": {
-											"Ano": {
-												"value": "@pipeline().parameters.Ano",
-												"type": "Expression"
-											},
-											"Mes": {
-												"value": "@pipeline().parameters.Mes",
-												"type": "Expression"
-											},
-											"Dia": {
-												"value": "@pipeline().parameters.Dia",
-												"type": "Expression"
-											},
-											"Hierarquia": {
-												"value": "@pipeline().parameters.Hierarquia",
-												"type": "Expression"
-											},
-											"RowsToSkip": {
-												"value": "@pipeline().parameters.RowsToSkip",
-												"type": "Expression"
-											},
-											"Encoding": {
-												"value": "@pipeline().parameters.Encoding",
-												"type": "Expression"
-											},
-											"TipoCompressao": {
-												"value": "@pipeline().parameters.TipoCompressao",
-												"type": "Expression"
-											},
-											"QuoteCharacter": {
-												"value": "@pipeline().parameters.QuoteCharacter",
-												"type": "Expression"
-											}
-										}
+										"waitOnCompletion": true
 									}
 								}
 							]
@@ -82,28 +48,23 @@
 			"Hierarquia": {
 				"type": "string"
 			},
+			"Item": {
+				"type": "string"
+			},
 			"Delimitador": {
 				"type": "string"
 			},
-			"RowsToSkip": {
+			"Colunas": {
 				"type": "string"
 			},
-			"Encoding": {
-				"type": "string"
-			},
-			"TipoCompressao": {
-				"type": "string"
-			},
-			"QuoteCharacter": {
-				"type": "string"
-			},
-			"Item": {
-				"type": "string"
+			"IdPriorizacaoExecucao": {
+				"type": "int"
 			}
 		},
 		"folder": {
 			"name": "ExecuçãoMasterData"
 		},
 		"annotations": []
-	}
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
 }
