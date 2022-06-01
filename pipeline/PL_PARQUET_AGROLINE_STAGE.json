@@ -15,13 +15,15 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"fieldList": [
-						"childItems"
-					],
-					"storeSettings": {
-						"type": "AzureBlobStorageReadSettings",
-						"recursive": true
+					"dataset": {
+						"referenceName": "ADLBlob",
+						"type": "DatasetReference",
+						"parameters": {
+							"Directory": "/INBOX",
+							"Container": "storagemasteragro"
+						}
 					},
+					"fieldList": [],
 					"formatSettings": {
 						"type": "DelimitedTextReadSettings",
 						"skipLineCount": 0
@@ -83,9 +85,6 @@
 								},
 								"sink": {
 									"type": "ParquetSink",
-									"storeSettings": {
-										"type": "AzureBlobStorageWriteSettings"
-									},
 									"formatSettings": {
 										"type": "ParquetWriteSettings"
 									}
@@ -97,7 +96,27 @@
 									"value": "@activity('Recupera a Estrutura').output.Structure",
 									"type": "Expression"
 								}
-							}
+							},
+							"inputs": [
+								{
+									"referenceName": "Delimitedtext1",
+									"type": "DatasetReference",
+									"parameters": {
+										"Directory": "RAW/RECEBIDOS",
+										"Container": "storagemaster",
+										"Delimitador": ";",
+										"Encoding": "UTF-8",
+										"Compressao": "none",
+										"QuoteCharacter": " "
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "Parquet",
+									"type": "DatasetReference"
+								}
+							]
 						},
 						{
 							"name": "Recupera a Estrutura",
@@ -119,14 +138,19 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"fieldList": [
-									"structure"
-								],
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
+								"dataset": {
+									"referenceName": "Delimitedtext1",
+									"type": "DatasetReference",
+									"parameters": {
+										"Directory": "RAW/RECEBIDOS",
+										"Container": "storagemaster",
+										"Delimitador": ";",
+										"Encoding": "UTF-8",
+										"Compressao": "none",
+										"QuoteCharacter": " "
+									}
 								},
+								"fieldList": [],
 								"formatSettings": {
 									"type": "DelimitedTextReadSettings"
 								}
@@ -224,6 +248,10 @@
 										"type": "String"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
 							}
 						}
 					]
@@ -245,7 +273,7 @@
 			},
 			"Hierarquia": {
 				"type": "string",
-				"defaultValue": "/Inbox/"
+				"defaultValue": "/INBOX/"
 			}
 		},
 		"variables": {
