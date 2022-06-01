@@ -23,7 +23,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "PL_PARQUET_AGROLINE_STAGE",
+											"referenceName": "PL_DELIMITADO_STAGE",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
@@ -42,6 +42,22 @@
 											},
 											"Hierarquia": {
 												"value": "@pipeline().parameters.Hierarquia",
+												"type": "Expression"
+											},
+											"RowsToSkip": {
+												"value": "@pipeline().parameters.RowsToSkip",
+												"type": "Expression"
+											},
+											"Encoding": {
+												"value": "@pipeline().parameters.Encoding",
+												"type": "Expression"
+											},
+											"TipoCompressao": {
+												"value": "@pipeline().parameters.TipoCompressao",
+												"type": "Expression"
+											},
+											"QuoteCharacter": {
+												"value": "@pipeline().parameters.QuoteCharacter",
 												"type": "Expression"
 											}
 										}
