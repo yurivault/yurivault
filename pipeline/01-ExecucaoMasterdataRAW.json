@@ -764,6 +764,18 @@
 										},
 										"userProperties": [],
 										"typeProperties": {
+											"dataset": {
+												"referenceName": "ADLBlobArquivo",
+												"type": "DatasetReference",
+												"parameters": {
+													"FileName": {
+														"value": "@{item().name}",
+														"type": "Expression"
+													},
+													"Directory": "INBOX/",
+													"Container": "storagemasteragro"
+												}
+											},
 											"enableLogging": false,
 											"storeSettings": {
 												"type": "AzureBlobStorageReadSettings",
