@@ -1,0 +1,9 @@
+{
+	"name": "masterdata-prd-adf",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "f2e49ca8-9a60-4cab-9679-f7273a90d992",
+		"tenantId": "d8cbd03e-a88a-42db-9260-8f2201f516d7"
+	}
+}
