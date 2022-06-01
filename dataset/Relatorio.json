@@ -1,5 +1,5 @@
 {
-	"name": "relatorio",
+	"name": "Relatorio",
 	"properties": {
 		"annotations": [],
 		"type": "AzureSqlTable",
