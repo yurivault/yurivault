@@ -42,13 +42,21 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
+								"dataset": {
+									"referenceName": "ADLBlobArquivo",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"Directory": "INBOX/",
+										"Container": "storagemaster"
+									}
+								},
 								"fieldList": [
 									"size"
 								],
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true
-								},
 								"formatSettings": {
 									"type": "DelimitedTextReadSettings"
 								}
@@ -898,6 +906,10 @@
 										"type": "String"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
 							}
 						}
 					]
@@ -923,13 +935,17 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"dataset": {
+						"referenceName": "ADLBlob",
+						"type": "DatasetReference",
+						"parameters": {
+							"Directory": "INBOX",
+							"Container": "storagemasteragro"
+						}
+					},
 					"fieldList": [
 						"childItems"
 					],
-					"storeSettings": {
-						"type": "AzureBlobStorageReadSettings",
-						"recursive": true
-					},
 					"formatSettings": {
 						"type": "DelimitedTextReadSettings",
 						"skipLineCount": 0
@@ -954,6 +970,10 @@
 						"sqlReaderQuery": "select year(getdate()) as Ano,RIGHT('00'+cast(month(getdate()) as varchar),2) as Mes,RIGHT('00'+cast(day(getdate()) as varchar),2) as Dia",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "Parametrizacao",
+						"type": "DatasetReference"
 					}
 				}
 			}
