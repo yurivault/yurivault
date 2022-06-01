@@ -668,15 +668,15 @@
 			},
 			"Mes": {
 				"type": "string",
-				"defaultValue": "03"
+				"defaultValue": "06"
 			},
 			"Dia": {
 				"type": "string",
-				"defaultValue": "16"
+				"defaultValue": "01"
 			},
 			"Hierarquia": {
 				"type": "string",
-				"defaultValue": "/Corporate/Comissao/Zurich/"
+				"defaultValue": "/teste/"
 			}
 		},
 		"variables": {
