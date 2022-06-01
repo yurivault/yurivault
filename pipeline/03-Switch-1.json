@@ -1,0 +1,109 @@
+{
+	"name": "03-Switch-1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Switch1",
+				"type": "Switch",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"on": {
+						"value": "@pipeline().parameters.Item",
+						"type": "Expression"
+					},
+					"cases": [
+						{
+							"value": "PL_PARQUET_AGROLINE_STAGE",
+							"activities": [
+								{
+									"name": "PL_PARQUET_AGROLINE_STAGE",
+									"type": "ExecutePipeline",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_DELIMITADO_STAGE",
+											"type": "PipelineReference"
+										},
+										"waitOnCompletion": true,
+										"parameters": {
+											"Ano": {
+												"value": "@pipeline().parameters.Ano",
+												"type": "Expression"
+											},
+											"Mes": {
+												"value": "@pipeline().parameters.Mes",
+												"type": "Expression"
+											},
+											"Dia": {
+												"value": "@pipeline().parameters.Dia",
+												"type": "Expression"
+											},
+											"Hierarquia": {
+												"value": "@pipeline().parameters.Hierarquia",
+												"type": "Expression"
+											},
+											"RowsToSkip": {
+												"value": "@pipeline().parameters.RowsToSkip",
+												"type": "Expression"
+											},
+											"Encoding": {
+												"value": "@pipeline().parameters.Encoding",
+												"type": "Expression"
+											},
+											"TipoCompressao": {
+												"value": "@pipeline().parameters.TipoCompressao",
+												"type": "Expression"
+											},
+											"QuoteCharacter": {
+												"value": "@pipeline().parameters.QuoteCharacter",
+												"type": "Expression"
+											}
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"Ano": {
+				"type": "string"
+			},
+			"Mes": {
+				"type": "string"
+			},
+			"Dia": {
+				"type": "string"
+			},
+			"Hierarquia": {
+				"type": "string"
+			},
+			"Delimitador": {
+				"type": "string"
+			},
+			"RowsToSkip": {
+				"type": "string"
+			},
+			"Encoding": {
+				"type": "string"
+			},
+			"TipoCompressao": {
+				"type": "string"
+			},
+			"QuoteCharacter": {
+				"type": "string"
+			},
+			"Item": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "ExecuçãoMasterData"
+		},
+		"annotations": []
+	}
+}
