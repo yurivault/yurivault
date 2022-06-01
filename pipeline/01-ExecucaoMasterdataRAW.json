@@ -319,7 +319,7 @@
 											"source": {
 												"type": "DelimitedTextSource",
 												"storeSettings": {
-													"type": "AzureBlobStorageReadSettings",
+													"type": "AzureBlobFSReadSettings",
 													"recursive": true
 												},
 												"formatSettings": {
@@ -328,6 +328,9 @@
 											},
 											"sink": {
 												"type": "DelimitedTextSink",
+												"storeSettings": {
+													"type": "AzureBlobFSWriteSettings"
+												},
 												"formatSettings": {
 													"type": "DelimitedTextWriteSettings",
 													"quoteAllText": true,
@@ -360,7 +363,10 @@
 														"value": "@{item().name}",
 														"type": "Expression"
 													},
-													"Directory": "RAW/",
+													"Directory": {
+														"value": "@concat('RAW',activity('VerificaParametrizacao').output.firstRow.Hierarquia,activity('VerificaDiaHierarquia').output.firstRow.Ano,'/',activity('VerificaDiaHierarquia').output.firstRow.Mes,'/',activity('VerificaDiaHierarquia').output.firstRow.Dia)",
+														"type": "Expression"
+													},
 													"Container": "storagemasteragro"
 												}
 											}
