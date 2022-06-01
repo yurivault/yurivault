@@ -1,0 +1,39 @@
+{
+	"name": "ADLBlob",
+	"properties": {
+		"parameters": {
+			"Directory": {
+				"type": "string",
+				"defaultValue": "INBOX"
+			},
+			"Container": {
+				"type": "string",
+				"defaultValue": "storagemasteragro"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": {
+					"value": "@dataset().Directory",
+					"type": "Expression"
+				},
+				"container": {
+					"value": "@dataset().Container",
+					"type": "Expression"
+				}
+			},
+			"columnDelimiter": ";",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
