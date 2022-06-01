@@ -26,7 +26,25 @@
 											"referenceName": "PL_DELIMITADO_CURATED",
 											"type": "PipelineReference"
 										},
-										"waitOnCompletion": true
+										"waitOnCompletion": true,
+										"parameters": {
+											"Ano": {
+												"value": "@pipeline().parameters.Ano",
+												"type": "Expression"
+											},
+											"Mes": {
+												"value": "@pipeline().parameters.Mes",
+												"type": "Expression"
+											},
+											"Dia": {
+												"value": "@pipeline().parameters.Dia",
+												"type": "Expression"
+											},
+											"Hierarquia": {
+												"value": "@pipeline().parameters.Hierarquia",
+												"type": "Expression"
+											}
+										}
 									}
 								}
 							]
