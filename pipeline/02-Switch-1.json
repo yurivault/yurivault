@@ -22,6 +22,10 @@
 									"dependsOn": [],
 									"userProperties": [],
 									"typeProperties": {
+										"pipeline": {
+											"referenceName": "PL_PARQUET_AGROLINE_STAGE",
+											"type": "PipelineReference"
+										},
 										"waitOnCompletion": true,
 										"parameters": {
 											"Ano": {
