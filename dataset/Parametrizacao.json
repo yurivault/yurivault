@@ -1,0 +1,13 @@
+{
+	"name": "Parametrizacao",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "parametrizacao"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
