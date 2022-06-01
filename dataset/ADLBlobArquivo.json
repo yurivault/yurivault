@@ -1,6 +1,10 @@
 {
 	"name": "ADLBlobArquivo",
 	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
 		"parameters": {
 			"FileName": {
 				"type": "string"
@@ -18,7 +22,7 @@
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation",
+				"type": "AzureBlobFSLocation",
 				"fileName": {
 					"value": "@dataset().FileName",
 					"type": "Expression"
@@ -27,7 +31,7 @@
 					"value": "@dataset().Directory",
 					"type": "Expression"
 				},
-				"container": {
+				"fileSystem": {
 					"value": "@dataset().Container",
 					"type": "Expression"
 				}
