@@ -1,14 +1,17 @@
 {
 	"name": "Parquet",
 	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureDataLakeStorage1",
+			"type": "LinkedServiceReference"
+		},
 		"annotations": [],
 		"type": "Parquet",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobStorageLocation",
-				"fileName": "teste1.parquet",
-				"folderPath": "Stage",
-				"container": "storagemaster"
+				"type": "AzureBlobFSLocation",
+				"folderPath": "STAGE",
+				"fileSystem": "storagemasteragro"
 			},
 			"compressionCodec": "snappy"
 		},
