@@ -28,6 +28,10 @@
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
+					"dataset": {
+						"referenceName": "Parametrizacao",
+						"type": "DatasetReference"
+					},
 					"firstRowOnly": false
 				}
 			},
@@ -101,6 +105,10 @@
 										"type": "String"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
 							}
 						},
 						{
@@ -153,6 +161,10 @@
 										"type": "String"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
 							}
 						},
 						{
@@ -205,6 +217,10 @@
 										"type": "String"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
 							}
 						},
 						{
@@ -250,6 +266,10 @@
 										"type": "String"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
 							}
 						},
 						{
@@ -265,6 +285,10 @@
 							],
 							"userProperties": [],
 							"typeProperties": {
+								"pipeline": {
+									"referenceName": "02-Switch-1",
+									"type": "PipelineReference"
+								},
 								"waitOnCompletion": true,
 								"parameters": {
 									"Ano": {
@@ -331,6 +355,10 @@
 						"sqlReaderQuery": "select year(getdate()) as Ano,RIGHT('00'+cast(month(getdate()) as varchar),2) as Mes,RIGHT('00'+cast(day(getdate()) as varchar),2) as Dia",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "Parametrizacao",
+						"type": "DatasetReference"
 					}
 				}
 			}
