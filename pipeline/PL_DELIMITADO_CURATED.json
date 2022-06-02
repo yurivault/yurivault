@@ -595,7 +595,7 @@
 							}
 						},
 						{
-							"name": "Dropa External Table Final WizData",
+							"name": "Dropa External Table Final Agroops",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
@@ -614,7 +614,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[WizData].[proc_DropExternalTable]",
+								"storedProcedureName": "[dbo].[proc_DropExternalTable]",
 								"storedProcedureParameters": {
 									"NomeTabela": {
 										"value": {
@@ -624,6 +624,10 @@
 										"type": "String"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
 							}
 						},
 						{
@@ -631,7 +635,7 @@
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Dropa External Table Final WizData",
+									"activity": "Dropa External Table Final Agroops",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -646,7 +650,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[WizData].[proc_DropTable]",
+								"storedProcedureName": "[dbo].[proc_DropTable]",
 								"storedProcedureParameters": {
 									"NomeTabela": {
 										"value": {
@@ -656,6 +660,10 @@
 										"type": "String"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
 							}
 						}
 					]
