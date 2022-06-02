@@ -276,7 +276,7 @@
 								"storedProcedureParameters": {
 									"campos": {
 										"value": {
-											"value": "Apolice\t                VARCHAR(250),\nNrEndosso\t\tVARCHAR(250),\nNumeroParcela\t\tVARCHAR(250),\nVlBase    \t\tVARCHAR(250),\nPercentualComissao            \tVARCHAR(250),\nValorComissao\t\tVARCHAR(250),\nCodigoProduto\t\t        VARCHAR(250),\nNmSegurado\t\tVARCHAR(250)\n\n\n\n",
+											"value": "NF VARCHAR(250),\nOperação VARCHAR(250),\nCliente VARCHAR(250),\nCodCliente\t VARCHAR(250),\nVendedor\tVARCHAR(250),\nCodVendedor\t VARCHAR(250),\nDescricaoProdutoVARCHAR(250),\nCodProduto VARCHAR(250),\nMarca\t VARCHAR(250),\nFornecedor VARCHAR(250),\nGrupoSubgrupo VARCHAR(250),\nData\t  VARCHAR(250),\nQtde\t VARCHAR(250),\nVdaBruta\t VARCHAR(250),\nMediaUN\t VARCHAR(250),\nICMS VARCHAR(250),\nPisConfins VARCHAR(250),\nOutros VARCHAR(250),\nCusto VARCHAR(250), \nFrete VARCHAR(250),\nDespAces VARCHAR(250),\nComissao VARCHAR(250),\nLucroBruto VARCHAR(250),\nPercLucro VARCHAR(250),\nPercVenda VARCHAR(250)\n\n\n\n\n",
 											"type": "Expression"
 										},
 										"type": "String"
