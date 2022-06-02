@@ -217,7 +217,7 @@
 							}
 						},
 						{
-							"name": "Dropa External Table WizData",
+							"name": "Dropa External Table Agroops",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
@@ -253,11 +253,11 @@
 							}
 						},
 						{
-							"name": "Cria External Table WizData",
+							"name": "Cria External Table Agroops",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Dropa External Table WizData",
+									"activity": "Dropa External Table Agroops",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -308,7 +308,7 @@
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Cria External Table WizData",
+									"activity": "Cria External Table Agroops",
 									"dependencyConditions": [
 										"Succeeded"
 									]
