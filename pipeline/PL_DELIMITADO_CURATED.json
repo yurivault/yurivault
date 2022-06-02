@@ -550,35 +550,35 @@
 									},
 									"TamanhoArquivoIni": {
 										"value": {
-											"value": "@activity('Carrega Fato Comissao').output.dataRead",
+											"value": "@activity('Carrega Fato_RelatorioABC').output",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"TamanhoArquivoFim": {
 										"value": {
-											"value": "@activity('Carrega Fato Comissao').output.dataWritten",
+											"value": "@activity('Carrega Fato_RelatorioABC').output",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"QtdLinhasIni": {
 										"value": {
-											"value": "@activity('Carrega Fato Comissao').output.rowsRead",
+											"value": "@activity('Carrega Fato_RelatorioABC').output",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"QtdLinhasFim": {
 										"value": {
-											"value": "@activity('Carrega Fato Comissao').output.rowsCopied",
+											"value": "@activity('Carrega Fato_RelatorioABC').output",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"QtdLinhasRej": {
 										"value": {
-											"value": "@activity('Carrega Fato Comissao').output.rowsSkipped",
+											"value": "@activity('Carrega Fato_RelatorioABC').output",
 											"type": "Expression"
 										},
 										"type": "String"
