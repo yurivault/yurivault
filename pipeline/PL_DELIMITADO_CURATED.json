@@ -359,7 +359,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_CarregaFatoComissaoCorporate]",
+								"storedProcedureName": "[dbo].[proc_InsereEsteiraRelatorioABC]",
 								"storedProcedureParameters": {
 									"NomeTabela": {
 										"value": {
