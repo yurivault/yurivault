@@ -340,7 +340,7 @@
 							}
 						},
 						{
-							"name": "Carrega Fato Comissao",
+							"name": "Carrega Fato_RelatorioABC",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
@@ -380,7 +380,7 @@
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Carrega Fato Comissao",
+									"activity": "Carrega Fato_RelatorioABC",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -395,7 +395,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+								"storedProcedureName": "[dbo].[proc_InsereLogProcessamento]",
 								"storedProcedureParameters": {
 									"NomePipeline": {
 										"value": {
@@ -441,7 +441,7 @@
 									},
 									"HierarquiaFinal": {
 										"value": {
-											"value": "@concat('WizData.FAT_COMIZ_WIZ')",
+											"value": "@concat('FAT_RelatorioABC')",
 											"type": "Expression"
 										},
 										"type": "String"
@@ -471,6 +471,10 @@
 										"type": "String"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
 							}
 						},
 						{
@@ -478,7 +482,7 @@
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Carrega Fato Comissao",
+									"activity": "Carrega Fato_RelatorioABC",
 									"dependencyConditions": [
 										"Failed"
 									]
@@ -493,7 +497,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+								"storedProcedureName": "[dbo].[proc_InsereLogProcessamento]",
 								"storedProcedureParameters": {
 									"NomePipeline": {
 										"value": {
@@ -584,6 +588,10 @@
 										"type": "String"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
 							}
 						},
 						{
