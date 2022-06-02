@@ -323,7 +323,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_CarregaComissaoCorporate]",
+								"storedProcedureName": "[dbo].[proc_CarregaEsteiraRelatorioABC]",
 								"storedProcedureParameters": {
 									"NomeTabela": {
 										"value": {
