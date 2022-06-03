@@ -516,7 +516,7 @@
 									},
 									"Camada": {
 										"value": {
-											"value": "RAW",
+											"value": "CURATED",
 											"type": "Expression"
 										},
 										"type": "String"
@@ -537,7 +537,7 @@
 									},
 									"Detalhe": {
 										"value": {
-											"value": "Arquivo não mapeado",
+											"value": "Falha na conversão do arquivo",
 											"type": "Expression"
 										},
 										"type": "String"
@@ -551,23 +551,17 @@
 									},
 									"HierarquiaFinal": {
 										"value": {
-											"value": "@concat('UNMAPPED','/',item().name)",
+											"value": "@concat('STAGE',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"TamanhoArquivoIni": {
-										"value": {
-											"value": "@activity('Copia para nao mapeado').output.dataRead",
-											"type": "Expression"
-										},
+										"value": "0",
 										"type": "String"
 									},
 									"TamanhoArquivoFim": {
-										"value": {
-											"value": "@activity('Copia para nao mapeado').output.dataWritten",
-											"type": "Expression"
-										},
+										"value": "0",
 										"type": "String"
 									},
 									"QtdLinhasIni": {
