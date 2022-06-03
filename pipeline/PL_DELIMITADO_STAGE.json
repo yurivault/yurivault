@@ -612,22 +612,28 @@
 		],
 		"parameters": {
 			"Ano": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "2022"
 			},
 			"Mes": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "06"
 			},
 			"Dia": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "03"
 			},
 			"Hierarquia": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "/RelatorioABC/"
 			},
 			"Delimitador": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": ";"
 			},
 			"RowsToSkip": {
-				"type": "int"
+				"type": "int",
+				"defaultValue": 1
 			},
 			"Encoding": {
 				"type": "string",
