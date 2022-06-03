@@ -317,11 +317,11 @@
 			},
 			"Dia": {
 				"type": "string",
-				"defaultValue": "01"
+				"defaultValue": "02"
 			},
 			"Hierarquia": {
 				"type": "string",
-				"defaultValue": "/teste/"
+				"defaultValue": "/RelatorioABC/"
 			}
 		},
 		"variables": {
