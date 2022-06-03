@@ -362,7 +362,7 @@
 								"storedProcedureParameters": {
 									"NomeTabela": {
 										"value": {
-											"value": "@concat(item().name)",
+											"value": "@concat(item().name,'CARGA')",
 											"type": "Expression"
 										},
 										"type": "String"
