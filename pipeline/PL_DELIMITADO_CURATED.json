@@ -217,7 +217,7 @@
 							}
 						},
 						{
-							"name": "Dropa External Table Agroops",
+							"name": "Dropa External Table WizData",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
@@ -253,11 +253,11 @@
 							}
 						},
 						{
-							"name": "Cria External Table Agroops",
+							"name": "Cria External Table WizData",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Dropa External Table Agroops",
+									"activity": "Dropa External Table WizData",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -276,7 +276,7 @@
 								"storedProcedureParameters": {
 									"campos": {
 										"value": {
-											"value": "NF VARCHAR(250),\nOperação VARCHAR(250),\nCliente VARCHAR(250),\nCodCliente\t VARCHAR(250),\nVendedor\tVARCHAR(250),\nCodVendedor\t VARCHAR(250),\nDescricaoProdutoVARCHAR(250),\nCodProduto VARCHAR(250),\nMarca\t VARCHAR(250),\nFornecedor VARCHAR(250),\nGrupoSubgrupo VARCHAR(250),\nData\t  VARCHAR(250),\nQtde\t VARCHAR(250),\nVdaBruta\t VARCHAR(250),\nMediaUN\t VARCHAR(250),\nICMS VARCHAR(250),\nPisConfins VARCHAR(250),\nOutros VARCHAR(250),\nCusto VARCHAR(250), \nFrete VARCHAR(250),\nDespAces VARCHAR(250),\nComissao VARCHAR(250),\nLucroBruto VARCHAR(250),\nPercLucro VARCHAR(250),\nPercVenda VARCHAR(250)\n\n\n\n\n",
+											"value": "Apolice\t                VARCHAR(250),\nNrEndosso\t\tVARCHAR(250),\nNumeroParcela\t\tVARCHAR(250),\nVlBase    \t\tVARCHAR(250),\nPercentualComissao            \tVARCHAR(250),\nValorComissao\t\tVARCHAR(250),\nCodigoProduto\t\t        VARCHAR(250),\nNmSegurado\t\tVARCHAR(250)\n\n\n\n",
 											"type": "Expression"
 										},
 										"type": "String"
@@ -298,7 +298,7 @@
 								}
 							},
 							"linkedServiceName": {
-								"referenceName": "ConexaoBanco",
+								"referenceName": "AzureSynapseMasterdata",
 								"type": "LinkedServiceReference"
 							}
 						},
@@ -308,7 +308,7 @@
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Cria External Table Agroops",
+									"activity": "Cria External Table WizData",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -323,7 +323,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_CarregaEsteiraRelatorioABC]",
+								"storedProcedureName": "[dbo].[proc_CarregaComissaoCorporate]",
 								"storedProcedureParameters": {
 									"NomeTabela": {
 										"value": {
@@ -340,7 +340,7 @@
 							}
 						},
 						{
-							"name": "Carrega Fato_RelatorioABC",
+							"name": "Carrega Fato Comissao",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
@@ -359,7 +359,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_InsereEsteiraRelatorioABC]",
+								"storedProcedureName": "[dbo].[proc_CarregaFatoComissaoCorporate]",
 								"storedProcedureParameters": {
 									"NomeTabela": {
 										"value": {
@@ -380,7 +380,7 @@
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Carrega Fato_RelatorioABC",
+									"activity": "Carrega Fato Comissao",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -395,7 +395,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_InsereLogProcessamento]",
+								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
 								"storedProcedureParameters": {
 									"NomePipeline": {
 										"value": {
@@ -441,7 +441,7 @@
 									},
 									"HierarquiaFinal": {
 										"value": {
-											"value": "@concat('FAT_RelatorioABC')",
+											"value": "@concat('WizData.FAT_COMIZ_WIZ')",
 											"type": "Expression"
 										},
 										"type": "String"
@@ -471,10 +471,6 @@
 										"type": "String"
 									}
 								}
-							},
-							"linkedServiceName": {
-								"referenceName": "ConexaoBanco",
-								"type": "LinkedServiceReference"
 							}
 						},
 						{
@@ -482,7 +478,7 @@
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Carrega Fato_RelatorioABC",
+									"activity": "Carrega Fato Comissao",
 									"dependencyConditions": [
 										"Failed"
 									]
@@ -497,7 +493,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_InsereLogProcessamento]",
+								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
 								"storedProcedureParameters": {
 									"NomePipeline": {
 										"value": {
@@ -550,35 +546,35 @@
 									},
 									"TamanhoArquivoIni": {
 										"value": {
-											"value": "@activity('Carrega Fato_RelatorioABC').output",
+											"value": "@activity('Carrega Fato Comissao').output.dataRead",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"TamanhoArquivoFim": {
 										"value": {
-											"value": "@activity('Carrega Fato_RelatorioABC').output",
+											"value": "@activity('Carrega Fato Comissao').output.dataWritten",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"QtdLinhasIni": {
 										"value": {
-											"value": "@activity('Carrega Fato_RelatorioABC').output",
+											"value": "@activity('Carrega Fato Comissao').output.rowsRead",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"QtdLinhasFim": {
 										"value": {
-											"value": "@activity('Carrega Fato_RelatorioABC').output",
+											"value": "@activity('Carrega Fato Comissao').output.rowsCopied",
 											"type": "Expression"
 										},
 										"type": "String"
 									},
 									"QtdLinhasRej": {
 										"value": {
-											"value": "@activity('Carrega Fato_RelatorioABC').output",
+											"value": "@activity('Carrega Fato Comissao').output.rowsSkipped",
 											"type": "Expression"
 										},
 										"type": "String"
@@ -588,14 +584,10 @@
 										"type": "String"
 									}
 								}
-							},
-							"linkedServiceName": {
-								"referenceName": "ConexaoBanco",
-								"type": "LinkedServiceReference"
 							}
 						},
 						{
-							"name": "Dropa External Table Final Agroops",
+							"name": "Dropa External Table Final WizData",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
@@ -614,7 +606,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_DropExternalTable]",
+								"storedProcedureName": "[WizData].[proc_DropExternalTable]",
 								"storedProcedureParameters": {
 									"NomeTabela": {
 										"value": {
@@ -624,10 +616,6 @@
 										"type": "String"
 									}
 								}
-							},
-							"linkedServiceName": {
-								"referenceName": "ConexaoBanco",
-								"type": "LinkedServiceReference"
 							}
 						},
 						{
@@ -635,7 +623,7 @@
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Dropa External Table Final Agroops",
+									"activity": "Dropa External Table Final WizData",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -650,7 +638,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_DropTable]",
+								"storedProcedureName": "[WizData].[proc_DropTable]",
 								"storedProcedureParameters": {
 									"NomeTabela": {
 										"value": {
@@ -660,10 +648,6 @@
 										"type": "String"
 									}
 								}
-							},
-							"linkedServiceName": {
-								"referenceName": "ConexaoBanco",
-								"type": "LinkedServiceReference"
 							}
 						}
 					]
