@@ -335,7 +335,7 @@
 								}
 							},
 							"linkedServiceName": {
-								"referenceName": "ConexaoBanco",
+								"referenceName": "AzureSynapseMasterdata",
 								"type": "LinkedServiceReference"
 							}
 						},
