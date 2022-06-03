@@ -217,7 +217,7 @@
 							}
 						},
 						{
-							"name": "Dropa External Table WizData",
+							"name": "Dropa External Table",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
@@ -253,11 +253,11 @@
 							}
 						},
 						{
-							"name": "Cria External Table WizData",
+							"name": "Cria External Table ",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Dropa External Table WizData",
+									"activity": "Dropa External Table",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -272,11 +272,11 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_CriaExternalTable1]",
+								"storedProcedureName": "[dbo].[proc_CriaExternalTable]",
 								"storedProcedureParameters": {
 									"campos": {
 										"value": {
-											"value": "Apolice\t                VARCHAR(250),\nNrEndosso\t\tVARCHAR(250),\nNumeroParcela\t\tVARCHAR(250),\nVlBase    \t\tVARCHAR(250),\nPercentualComissao            \tVARCHAR(250),\nValorComissao\t\tVARCHAR(250),\nCodigoProduto\t\t        VARCHAR(250),\nNmSegurado\t\tVARCHAR(250)\n\n\n\n",
+											"value": "Apolice\t                VARCHAR(250)\n",
 											"type": "Expression"
 										},
 										"type": "String"
@@ -298,7 +298,7 @@
 								}
 							},
 							"linkedServiceName": {
-								"referenceName": "AzureSynapseMasterdata",
+								"referenceName": "linkedService1",
 								"type": "LinkedServiceReference"
 							}
 						}
