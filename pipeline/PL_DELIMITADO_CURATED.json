@@ -272,7 +272,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_CriaExternalTable]",
+								"storedProcedureName": "[dbo].[proc_CriaExternalTable1]",
 								"storedProcedureParameters": {
 									"campos": {
 										"value": {
