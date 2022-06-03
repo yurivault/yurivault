@@ -253,7 +253,7 @@
 							}
 						},
 						{
-							"name": "Cria External Table ",
+							"name": "Cria External Table 1",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
