@@ -337,6 +337,42 @@
 								"referenceName": "linkedService1",
 								"type": "LinkedServiceReference"
 							}
+						},
+						{
+							"name": "Insere Fato Relatorio",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Cria Table Tmp Relatorio",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[proc_InsereEsteiraRelatorioABC]",
+								"storedProcedureParameters": {
+									"NomeTabela": {
+										"value": {
+											"value": "@concat(item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "linkedService1",
+								"type": "LinkedServiceReference"
+							}
 						}
 					]
 				}
