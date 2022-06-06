@@ -683,7 +683,7 @@
 			},
 			"Dia": {
 				"type": "string",
-				"defaultValue": "02"
+				"defaultValue": "06"
 			},
 			"Hierarquia": {
 				"type": "string",
