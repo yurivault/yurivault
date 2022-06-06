@@ -1,9 +1,1530 @@
 {
 	"name": "stagesteste",
 	"properties": {
-		"folder": {
-			"name": "ExecuçãoMasterData/STAGE"
+		"activities": [
+			{
+				"name": "Verifica_Arquivos_Raw",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings",
+						"skipLineCount": 0
+					}
+				}
+			},
+			{
+				"name": "Trata Varios Arquivos",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Verifica_Arquivos_Raw",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Verifica_Arquivos_Raw').output.childitems",
+						"type": "Expression"
+					},
+					"batchCount": 10,
+					"activities": [
+						{
+							"name": "Ajusta Arquivo",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Cria External Table",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@replace(concat(' \n SELECT [NUMERODAAPOLICE]\n      ,[NUMERODEPROPOSTA]\n      ,[NUMERODACOTACAO]\n      ,[NUMERODOENDOSSO]\n      ,[CODIGOTIPODEENDOSSO]\n      ,[DESCRICAODETIPODEENDOSSO]\n      ,[DATADEEMISSAO]\n      ,[DATADEINICIODAVIGENCIA]\n      ,[DATADEFIMDAVIGENCIA]\n      ,[QUANTIDADEDEPARCELAS]\n      ,[DATAVENCIMENTOPRIMEIRAPARCELA]\n      ,[DATAVENCIMENTOSEGUNDAPARCELA]\n      ,[CEPDORISCO]\n      ,[VALORDAIMPORTANCIASEGURADA]\n      ,[VALORDOPREMIOLIQUIDO]\n      ,[VALORDOPREMIOTOTAL]\n      ,[PERCENTUALDECOMISSAO]\n      ,[PERCENTUALDECOMISSAODECOCORRETAGEM]\n      ,[VALORDECOMISSAOWIZCORPORATE]\n      ,[CODIGODORAMOSUSEPDAAPOLICE]\n      ,[NOMEDORAMOSUSEPDAAPOLICE]\n      ,[CODIGODEPRODUTO]\n      ,[NOMEDOPRODUTO]\n      ,[SEGURADONOME]\n      ,[SEGURADOTIPODEPESSOA]\n      ,[SEGURADOCPFCNPJ]\n      ,[SEGURADOTELEFONE]\n      ,REPLACE([SEGURADOEMAIL],\\;\\,\\,\\)[SEGURADOEMAIL]\n      ,[SEGURADOLOGRADOURO]\n      ,[SEGURADOCOMPLEMENTO]\n      ,[SEGURADOBAIRRO]\n      ,[SEGURADOCIDADE]\n      ,[SEGURADOUF]\n      ,[SEGURADOCEP]\n      ,[TOMADORNOME]\n      ,[TOMADORTIPODEPESSOA]\n      ,[TOMADORCPFCNPJ]\n      ,[TOMADORTELEFONE]\n      ,[TOMADOREMAIL]\n      ,[TOMADORLOGRADOURO]\n      ,[TOMADORCOMPLEMENTO]\n      ,[TOMADORBAIRRO]\n      ,[TOMADORCIDADE]\n      ,[TOMADORUF]\n      ,[TOMADORCEP]\n      ,[CORRETORNOME]\n      ,[CORRETORTIPODEPESSOA]\n      ,[CORRETORCPFCNPJ]\n      ,[CORRETORTELEFONE]\n      ,REPLACE([CORRETOREMAIL],\\;\\,\\,\\)[CORRETOREMAIL]\n      ,[CORRETORLOGRADOURO]\n      ,[CORRETORCOMPLEMENTO]\n      ,[CORRETORBAIRRO]\n      ,[CORRETORCIDADE]\n      ,[CORRETORUF]\n      ,[CORRETORCEP]\n      ,[MODALIDADE]\nfrom [dbo].[',item().name,'] \nWHERE [NUMERODAAPOLICE] <> \\NUMERODAAPOLICE\\\n'),'\\','''')",
+										"type": "Expression"
+									},
+									"queryTimeout": "03:20:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"enableSkipIncompatibleRow": true,
+								"dataIntegrationUnits": 2,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "NUMERODAAPOLICE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "NUMERODAAPOLICE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "NUMERODEPROPOSTA",
+												"type": "String"
+											},
+											"sink": {
+												"name": "NUMERODEPROPOSTA",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "NUMERODACOTACAO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "NUMERODACOTACAO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "NUMERODOENDOSSO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "NUMERODOENDOSSO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CODIGOTIPODEENDOSSO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CODIGOTIPODEENDOSSO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DESCRICAODETIPODEENDOSSO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DESCRICAODETIPODEENDOSSO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DATADEEMISSAO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DATADEEMISSAO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DATADEINICIODAVIGENCIA",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DATADEINICIODAVIGENCIA",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DATADEFIMDAVIGENCIA",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DATADEFIMDAVIGENCIA",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "QUANTIDADEDEPARCELAS",
+												"type": "String"
+											},
+											"sink": {
+												"name": "QUANTIDADEDEPARCELAS",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DATAVENCIMENTOPRIMEIRAPARCELA",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DATAVENCIMENTOPRIMEIRAPARCELA",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DATAVENCIMENTOSEGUNDAPARCELA",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DATAVENCIMENTOSEGUNDAPARCELA",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CEPDORISCO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CEPDORISCO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "VALORDAIMPORTANCIASEGURADA",
+												"type": "String"
+											},
+											"sink": {
+												"name": "VALORDAIMPORTANCIASEGURADA",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "VALORDOPREMIOLIQUIDO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "VALORDOPREMIOLIQUIDO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "VALORDOPREMIOTOTAL",
+												"type": "String"
+											},
+											"sink": {
+												"name": "VALORDOPREMIOTOTAL",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "PERCENTUALDECOMISSAO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "PERCENTUALDECOMISSAO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "PERCENTUALDECOMISSAODECOCORRETAGEM",
+												"type": "String"
+											},
+											"sink": {
+												"name": "PERCENTUALDECOMISSAODECOCORRETAGEM",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "VALORDECOMISSAOWIZCORPORATE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "VALORDECOMISSAOWIZCORPORATE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CODIGODORAMOSUSEPDAAPOLICE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CODIGODORAMOSUSEPDAAPOLICE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "NOMEDORAMOSUSEPDAAPOLICE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "NOMEDORAMOSUSEPDAAPOLICE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CODIGODEPRODUTO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CODIGODEPRODUTO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "NOMEDOPRODUTO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "NOMEDOPRODUTO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "SEGURADONOME",
+												"type": "String"
+											},
+											"sink": {
+												"name": "SEGURADONOME",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "SEGURADOTIPODEPESSOA",
+												"type": "String"
+											},
+											"sink": {
+												"name": "SEGURADOTIPODEPESSOA",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "SEGURADOCPFCNPJ",
+												"type": "String"
+											},
+											"sink": {
+												"name": "SEGURADOCPFCNPJ",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "SEGURADOTELEFONE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "SEGURADOTELEFONE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "SEGURADOEMAIL",
+												"type": "String"
+											},
+											"sink": {
+												"name": "SEGURADOEMAIL",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "SEGURADOLOGRADOURO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "SEGURADOLOGRADOURO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "SEGURADOCOMPLEMENTO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "SEGURADOCOMPLEMENTO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "SEGURADOBAIRRO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "SEGURADOBAIRRO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "SEGURADOCIDADE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "SEGURADOCIDADE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "SEGURADOUF",
+												"type": "String"
+											},
+											"sink": {
+												"name": "SEGURADOUF",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "SEGURADOCEP",
+												"type": "String"
+											},
+											"sink": {
+												"name": "SEGURADOCEP",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TOMADORNOME",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TOMADORNOME",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TOMADORTIPODEPESSOA",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TOMADORTIPODEPESSOA",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TOMADORCPFCNPJ",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TOMADORCPFCNPJ",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TOMADORTELEFONE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TOMADORTELEFONE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TOMADOREMAIL",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TOMADOREMAIL",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TOMADORLOGRADOURO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TOMADORLOGRADOURO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TOMADORCOMPLEMENTO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TOMADORCOMPLEMENTO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TOMADORBAIRRO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TOMADORBAIRRO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TOMADORCIDADE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TOMADORCIDADE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TOMADORUF",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TOMADORUF",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "TOMADORCEP",
+												"type": "String"
+											},
+											"sink": {
+												"name": "TOMADORCEP",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CORRETORNOME",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CORRETORNOME",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CORRETORTIPODEPESSOA",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CORRETORTIPODEPESSOA",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CORRETORCPFCNPJ",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CORRETORCPFCNPJ",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CORRETORTELEFONE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CORRETORTELEFONE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CORRETOREMAIL",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CORRETOREMAIL",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CORRETORLOGRADOURO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CORRETORLOGRADOURO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CORRETORCOMPLEMENTO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CORRETORCOMPLEMENTO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CORRETORBAIRRO",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CORRETORBAIRRO",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CORRETORCIDADE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CORRETORCIDADE",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CORRETORUF",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CORRETORUF",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "CORRETORCEP",
+												"type": "String"
+											},
+											"sink": {
+												"name": "CORRETORCEP",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "MODALIDADE",
+												"type": "String"
+											},
+											"sink": {
+												"name": "MODALIDADE",
+												"type": "String"
+											}
+										}
+									]
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "Parametrizacao",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ConversaoParquetNome",
+									"type": "DatasetReference",
+									"parameters": {
+										"Directory": {
+											"value": "@concat('STAGE',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia)\n",
+											"type": "Expression"
+										},
+										"Container": "storagemaster",
+										"FileName": {
+											"value": "@replace(replace(replace(toLower(item().name),'.csv','.parquet'),'.txt','.parquet'),'.zip','.parquet')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Insere Log Inicio",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Verifica Arquivo foi processado",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+								"storedProcedureParameters": {
+									"NomePipeline": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Camada": {
+										"value": {
+											"value": "STAGE",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": {
+											"value": "Em Processamento",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Detalhe": {
+										"value": {
+											"value": "Processando Arquivo",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"isUpdate": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaFinal": {
+										"value": null,
+										"type": "String"
+									},
+									"TamanhoArquivoIni": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasIni": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoFim": {
+										"value": null,
+										"type": "String"
+									},
+									"QtdLinhasFim": {
+										"value": null,
+										"type": "String"
+									},
+									"QtdLinhasRej": {
+										"value": null,
+										"type": "String"
+									},
+									"HierarquiaInicial": {
+										"value": {
+											"value": "@concat('RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Verifica Arquivo foi processado",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "PreencheNomeArquivo",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "DECLARE @A varchar(30)\n\nselect top 1 @A=tmp.A --as Prosseguir  \nFROM\n(\n\tSELECT 'N' as A\n\tfrom dbo.logprocessamento with(nolock)\n\twhere NomeArquivo = '@{item().name}'\n\tand Status = 'Sucesso' \n\tand Camada = 'STAGE'\n\tUNION ALL\n\tSELECT 'S' as A\n) tmp\norder by A\n\nIF @A = 'N'\nBEGIN\n\tRAISERROR ('Arquivo Já Processado',16,1)\nEND\nELSE\nBEGIN\n\tSELECT 'S' as Prosseguir\nEND",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "LogProcessamento",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "Atualiza Log Sucesso",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Ajusta Arquivo",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+								"storedProcedureParameters": {
+									"NomePipeline": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Camada": {
+										"value": {
+											"value": "STAGE",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": {
+											"value": "Sucesso",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Detalhe": {
+										"value": {
+											"value": "Dados enviado para STAGE com Sucesso",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"isUpdate": {
+										"value": {
+											"value": "1",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaFinal": {
+										"value": {
+											"value": "@concat('STAGE',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoIni": {
+										"value": {
+											"value": "@activity('Ajusta Arquivo').output.dataRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoFim": {
+										"value": {
+											"value": "@activity('Ajusta Arquivo').output.dataWritten",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasIni": {
+										"value": {
+											"value": "@activity('Ajusta Arquivo').output.rowsRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasFim": {
+										"value": {
+											"value": "@activity('Ajusta Arquivo').output.rowsCopied",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasRej": {
+										"value": {
+											"value": "@activity('Ajusta Arquivo').output.rowsSkipped",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaInicial": {
+										"value": null,
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Atualiza Log Falha",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Ajusta Arquivo",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+								"storedProcedureParameters": {
+									"NomePipeline": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Camada": {
+										"value": {
+											"value": "STAGE",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": {
+											"value": "Falha",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Detalhe": {
+										"value": {
+											"value": "Falha na conversão do arquivo",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"isUpdate": {
+										"value": {
+											"value": "1",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaFinal": {
+										"value": {
+											"value": "@concat('RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoIni": {
+										"value": {
+											"value": "@activity('Ajusta Arquivo').output.dataRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoFim": {
+										"value": {
+											"value": "@activity('Ajusta Arquivo').output.dataWritten",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasIni": {
+										"value": {
+											"value": "@activity('Ajusta Arquivo').output.rowsRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasFim": {
+										"value": null,
+										"type": "String"
+									},
+									"QtdLinhasRej": {
+										"value": {
+											"value": "@activity('Ajusta Arquivo').output.rowsSkipped",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaInicial": {
+										"value": null,
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Dropa External Table",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Insere Log Inicio",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_DropExternalTable]",
+								"storedProcedureParameters": {
+									"NomeTabela": {
+										"value": {
+											"value": "@concat(item().name,'')",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Cria External Table",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Dropa External Table",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_CriaExternalTableCSV_ADW3]",
+								"storedProcedureParameters": {
+									"campos": {
+										"value": {
+											"value": "\t[NUMERODAAPOLICE] [varchar](500) NULL,\n\t[NUMERODEPROPOSTA] [varchar](500) NULL,\n\t[NUMERODACOTACAO] [varchar](500) NULL,\n\t[NUMERODOENDOSSO] [varchar](500) NULL,\n\t[CODIGOTIPODEENDOSSO] [varchar](500) NULL,\n\t[DESCRICAODETIPODEENDOSSO] [varchar](500) NULL,\n\t[DATADEEMISSAO] [varchar](500) NULL,\n\t[DATADEINICIODAVIGENCIA] [varchar](500) NULL,\n\t[DATADEFIMDAVIGENCIA] [varchar](500) NULL,\n\t[QUANTIDADEDEPARCELAS] [varchar](500) NULL,\n\t[DATAVENCIMENTOPRIMEIRAPARCELA] [varchar](500) NULL,\n\t[DATAVENCIMENTOSEGUNDAPARCELA] [varchar](500) NULL,\n\t[CEPDORISCO] [varchar](500) NULL,\n\t[VALORDAIMPORTANCIASEGURADA] [varchar](500) NULL,\n\t[VALORDOPREMIOLIQUIDO] [varchar](500) NULL,\n\t[VALORDOPREMIOTOTAL] [varchar](500) NULL,\n\t[PERCENTUALDECOMISSAO] [varchar](500) NULL,\n\t[PERCENTUALDECOMISSAODECOCORRETAGEM] [varchar](500) NULL,\n\t[VALORDECOMISSAOWIZCORPORATE] [varchar](500) NULL,\n\t[CODIGODORAMOSUSEPDAAPOLICE] [varchar](500) NULL,\n\t[NOMEDORAMOSUSEPDAAPOLICE] [varchar](500) NULL,\n\t[CODIGODEPRODUTO] [varchar](500) NULL,\n\t[NOMEDOPRODUTO] [varchar](500) NULL,\n\t[SEGURADONOME] [varchar](500) NULL,\n\t[SEGURADOTIPODEPESSOA] [varchar](500) NULL,\n\t[SEGURADOCPFCNPJ] [varchar](500) NULL,\n\t[SEGURADOTELEFONE] [varchar](500) NULL,\n\t[SEGURADOEMAIL] [varchar](1500) NULL,\n\t[SEGURADOLOGRADOURO] [varchar](500) NULL,\n\t[SEGURADOCOMPLEMENTO] [varchar](500) NULL,\n\t[SEGURADOBAIRRO] [varchar](500) NULL,\n\t[SEGURADOCIDADE] [varchar](500) NULL,\n\t[SEGURADOUF] [varchar](500) NULL,\n\t[SEGURADOCEP] [varchar](500) NULL,\n\t[TOMADORNOME] [varchar](500) NULL,\n\t[TOMADORTIPODEPESSOA] [varchar](500) NULL,\n\t[TOMADORCPFCNPJ] [varchar](500) NULL,\n\t[TOMADORTELEFONE] [varchar](500) NULL,\n\t[TOMADOREMAIL] [varchar](500) NULL,\n\t[TOMADORLOGRADOURO] [varchar](500) NULL,\n\t[TOMADORCOMPLEMENTO] [varchar](500) NULL,\n\t[TOMADORBAIRRO] [varchar](500) NULL,\n\t[TOMADORCIDADE] [varchar](500) NULL,\n\t[TOMADORUF] [varchar](500) NULL,\n\t[TOMADORCEP] [varchar](500) NULL,\n\t[CORRETORNOME] [varchar](500) NULL,\n\t[CORRETORTIPODEPESSOA] [varchar](500) NULL,\n\t[CORRETORCPFCNPJ] [varchar](500) NULL,\n\t[CORRETORTELEFONE] [varchar](500) NULL,\n\t[CORRETOREMAIL] [varchar](1500) NULL,\n\t[CORRETORLOGRADOURO] [varchar](500) NULL,\n\t[CORRETORCOMPLEMENTO] [varchar](500) NULL,\n\t[CORRETORBAIRRO] [varchar](500) NULL,\n\t[CORRETORCIDADE] [varchar](500) NULL,\n\t[CORRETORUF] [varchar](500) NULL,\n\t[CORRETORCEP] [varchar](500) NULL,\n\t[MODALIDADE] [varchar](500) NULL",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@concat('/RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"NomeTabela": {
+										"value": {
+											"value": "@concat('[dbo].[',item().name,']')",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Dropa External Table Final",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Ajusta Arquivo",
+									"dependencyConditions": [
+										"Completed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_DropExternalTable]",
+								"storedProcedureParameters": {
+									"NomeTabela": {
+										"value": {
+											"value": "item().name",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "PreencheNomeArquivo",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "NomeUtilizado",
+								"value": {
+									"value": "@replace(item().name,'.TXT','.parquet')",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "DeletaArquivos_RAW",
+							"type": "Delete",
+							"dependsOn": [
+								{
+									"activity": "Dropa External Table Final",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "ADLBlobArquivo",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": {
+											"value": "item().name",
+											"type": "Expression"
+										},
+										"Directory": {
+											"value": "@concat('RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia)",
+											"type": "Expression"
+										},
+										"Container": "storagemaster"
+									}
+								},
+								"enableLogging": false,
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true
+								}
+							}
+						},
+						{
+							"name": "DeletaArquivos_RAW_PosDropExternal",
+							"type": "Delete",
+							"dependsOn": [
+								{
+									"activity": "Dropa External Table",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "ADLBlobArquivo",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": {
+											"value": "item().name",
+											"type": "Expression"
+										},
+										"Directory": {
+											"value": "@concat('RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia)",
+											"type": "Expression"
+										},
+										"Container": "storagemaster"
+									}
+								},
+								"enableLogging": false,
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true
+								}
+							}
+						},
+						{
+							"name": "DeletaArquivos_RAW_PosCreateExternal",
+							"type": "Delete",
+							"dependsOn": [
+								{
+									"activity": "Cria External Table",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "ADLBlobArquivo",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": {
+											"value": "item().name",
+											"type": "Expression"
+										},
+										"Directory": {
+											"value": "@concat('RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia)",
+											"type": "Expression"
+										},
+										"Container": "storagemaster"
+									}
+								},
+								"enableLogging": false,
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true
+								}
+							}
+						},
+						{
+							"name": "Atualiza Log Falha_PosDropExternal",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "DeletaArquivos_RAW_PosDropExternal",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+								"storedProcedureParameters": {
+									"NomePipeline": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Camada": {
+										"value": {
+											"value": "STAGE",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": {
+											"value": "Falha",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Detalhe": {
+										"value": {
+											"value": "Falha na conversão do arquivo",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"isUpdate": {
+										"value": {
+											"value": "1",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaFinal": {
+										"value": null,
+										"type": "String"
+									},
+									"TamanhoArquivoIni": {
+										"value": null,
+										"type": "String"
+									},
+									"TamanhoArquivoFim": {
+										"value": null,
+										"type": "String"
+									},
+									"QtdLinhasIni": {
+										"value": null,
+										"type": "String"
+									},
+									"QtdLinhasFim": {
+										"value": null,
+										"type": "String"
+									},
+									"QtdLinhasRej": {
+										"value": null,
+										"type": "String"
+									},
+									"HierarquiaInicial": {
+										"value": null,
+										"type": "String"
+									}
+								}
+							}
+						},
+						{
+							"name": "Atualiza Log Falha_PosCreateExternal",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "DeletaArquivos_RAW_PosCreateExternal",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+								"storedProcedureParameters": {
+									"NomePipeline": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Camada": {
+										"value": {
+											"value": "STAGE",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": {
+											"value": "Falha",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Detalhe": {
+										"value": {
+											"value": "Falha na conversão do arquivo",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"isUpdate": {
+										"value": {
+											"value": "1",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaFinal": {
+										"value": null,
+										"type": "String"
+									},
+									"TamanhoArquivoIni": {
+										"value": null,
+										"type": "String"
+									},
+									"TamanhoArquivoFim": {
+										"value": null,
+										"type": "String"
+									},
+									"QtdLinhasIni": {
+										"value": null,
+										"type": "String"
+									},
+									"QtdLinhasFim": {
+										"value": null,
+										"type": "String"
+									},
+									"QtdLinhasRej": {
+										"value": null,
+										"type": "String"
+									},
+									"HierarquiaInicial": {
+										"value": null,
+										"type": "String"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"Ano": {
+				"type": "string",
+				"defaultValue": "2021"
+			},
+			"Mes": {
+				"type": "string",
+				"defaultValue": "03"
+			},
+			"Dia": {
+				"type": "string",
+				"defaultValue": "12"
+			},
+			"Hierarquia": {
+				"type": "string",
+				"defaultValue": "/Berkley/Emissoes/"
+			}
 		},
-		"annotations": []
-	}
+		"variables": {
+			"NomeArquivo": {
+				"type": "String"
+			},
+			"NomeUtilizado": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "ExecuçãoMestre/STAGE"
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-06-03T18:11:00Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
 }
