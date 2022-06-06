@@ -1085,7 +1085,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[WizData].[proc_CriaExternalTableCSV_ADW3]",
+								"storedProcedureName": "[dbo].[proc_CriaExternalTableCSV_ADW3]",
 								"storedProcedureParameters": {
 									"campos": {
 										"value": {
@@ -1109,6 +1109,10 @@
 										"type": "String"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "linkedService1",
+								"type": "LinkedServiceReference"
 							}
 						},
 						{
