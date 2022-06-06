@@ -23,7 +23,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "PL_DELIMITADO_STAGE1",
+											"referenceName": "PL_DELIMITADO_STAGE_PARQUET",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,

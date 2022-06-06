@@ -1,5 +1,5 @@
 {
-	"name": "PL_DELIMITADO_STAGE1",
+	"name": "PL_DELIMITADO_STAGE_PARQUET",
 	"properties": {
 		"activities": [
 			{
