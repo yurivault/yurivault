@@ -682,7 +682,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[WizData].[proc_InsereLogProcessamento]",
+								"storedProcedureName": "[dbo].[proc_InsereLogProcessamento]",
 								"storedProcedureParameters": {
 									"NomePipeline": {
 										"value": {
@@ -764,6 +764,10 @@
 										"type": "String"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
 							}
 						},
 						{
@@ -1045,7 +1049,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[WizData].[proc_DropExternalTable]",
+								"storedProcedureName": "[dbo].[proc_DropExternalTable]",
 								"storedProcedureParameters": {
 									"NomeTabela": {
 										"value": {
@@ -1055,6 +1059,10 @@
 										"type": "String"
 									}
 								}
+							},
+							"linkedServiceName": {
+								"referenceName": "linkedService1",
+								"type": "LinkedServiceReference"
 							}
 						},
 						{
