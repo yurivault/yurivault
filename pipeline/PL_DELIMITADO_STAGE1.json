@@ -1,9 +1,47 @@
 {
-	"name": "PL_DELIMITADO_STAGE",
+	"name": "PL_DELIMITADO_STAGE1",
 	"properties": {
 		"activities": [
 			{
-				"name": "Trata Varios Arquivos",
+				"name": "Verifica_Arquivos_Raw",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ADLBlob",
+						"type": "DatasetReference",
+						"parameters": {
+							"Directory": {
+								"value": "@concat('RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia)",
+								"type": "Expression"
+							},
+							"Container": "storagemasteragro"
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings",
+						"skipLineCount": 0
+					}
+				}
+			},
+			{
+				"name": "Trata Varios Arquivos Delimitados",
 				"type": "ForEach",
 				"dependsOn": [
 					{
@@ -22,13 +60,704 @@
 					"batchCount": 10,
 					"activities": [
 						{
+							"name": "Converte Arquivos para Parquet",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Recupera a Estrutura",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings",
+										"skipLineCount": {
+											"value": "@pipeline().parameters.RowsToSkip",
+											"type": "Expression"
+										}
+									}
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"enableSkipIncompatibleRow": true,
+								"logSettings": {
+									"enableCopyActivityLog": true,
+									"copyActivityLogSettings": {
+										"logLevel": "Warning",
+										"enableReliableLogging": false
+									},
+									"logLocationSettings": {
+										"linkedServiceName": {
+											"referenceName": "AzureDataLakeStorage1",
+											"type": "LinkedServiceReference"
+										},
+										"path": {
+											"value": "@concat('storagemaster','/','FAILURE','/',variables('NomeArquivo'))",
+											"type": "Expression"
+										}
+									}
+								},
+								"dataIntegrationUnits": 2,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 1
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 2
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 3
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 4
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 5
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 6
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 7
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 8
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 9
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 10
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 11
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 12
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 13
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 14
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 15
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 16
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 17
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 18
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 19
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 20
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 21
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 22
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 23
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 24
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"type": "String",
+												"ordinal": 25
+											},
+											"sink": {
+												"name": "Columnundefined",
+												"type": "String"
+											}
+										}
+									]
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ADLBlobArquivoDELIMITADOR",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"Directory": {
+											"value": "@concat('RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia)",
+											"type": "Expression"
+										},
+										"Container": "storagemasteragro",
+										"Delimitador": {
+											"value": "@pipeline().parameters.Delimitador",
+											"type": "Expression"
+										},
+										"Encoding": {
+											"value": "@pipeline().parameters.Encoding",
+											"type": "Expression"
+										},
+										"Compressao": {
+											"value": "@pipeline().parameters.TipoCompressao",
+											"type": "Expression"
+										},
+										"QuoteCharacter": " "
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ConversaoParquetNome",
+									"type": "DatasetReference",
+									"parameters": {
+										"Directory": {
+											"value": "@concat('STAGE',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia)",
+											"type": "Expression"
+										},
+										"Container": "storagemasteragro",
+										"FileName": {
+											"value": "@replace(replace(replace(toLower(item().name),'.csv','.parquet'),'.txt','.parquet'),'.zip','.parquet')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "Recupera a Estrutura",
+							"type": "GetMetadata",
+							"dependsOn": [
+								{
+									"activity": "Insere Log Inicio",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "ADLBlobArquivoDELIMITADOR",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileName": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"Directory": {
+											"value": "@concat('RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia)",
+											"type": "Expression"
+										},
+										"Container": "storagemasteragro",
+										"Delimitador": {
+											"value": "@pipeline().parameters.Delimitador",
+											"type": "Expression"
+										},
+										"Encoding": {
+											"value": "@pipeline().parameters.Encoding",
+											"type": "Expression"
+										},
+										"Compressao": {
+											"value": "@pipeline().parameters.TipoCompressao",
+											"type": "Expression"
+										},
+										"QuoteCharacter": " "
+									}
+								},
+								"fieldList": [
+									"structure"
+								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							}
+						},
+						{
+							"name": "Verifica Arquivo foi processado",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "DECLARE @A varchar(30)\n\nselect top 1 @A=tmp.A --as Prosseguir  \nFROM\n(\n\tSELECT 'N' as A\n\tfrom dbo.logprocessamento with(nolock)\n\twhere NomeArquivo = '@{item().name}'\n\tand Status = 'Sucessoa' \n\tand Camada = 'STAGE'\n\tUNION ALL\n\tSELECT 'S' as A\n) tmp\norder by A\n\nIF @A = 'S'\nBEGIN\n\tRAISERROR ('Necessita Processamento',16,1)\nEND\nELSE\nBEGIN\n\tSELECT 'N' as NecessitaProcessamento\nEND",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "LogProcessamento",
+									"type": "DatasetReference"
+								},
+								"firstRowOnly": false
+							}
+						},
+						{
+							"name": "Atualiza Log Sucesso",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Converte Arquivos para Parquet",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[proc_InsereLogProcessamento]",
+								"storedProcedureParameters": {
+									"NomePipeline": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Camada": {
+										"value": {
+											"value": "STAGE",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": {
+											"value": "Sucesso",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Detalhe": {
+										"value": {
+											"value": "Dados enviado para STAGE com Sucesso",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"isUpdate": {
+										"value": {
+											"value": "1",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaFinal": {
+										"value": {
+											"value": "@concat('STAGE',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoIni": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.dataRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoFim": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.dataWritten",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasIni": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.rowsRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasFim": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.rowsCopied",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasRej": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.rowsSkipped",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaInicial": {
+										"value": null,
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Atualiza Log Falha",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Converte Arquivos para Parquet",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[proc_InsereLogProcessamento]",
+								"storedProcedureParameters": {
+									"NomePipeline": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Camada": {
+										"value": {
+											"value": "STAGE",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": {
+											"value": "Falha",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Detalhe": {
+										"value": {
+											"value": "Falha na conversão do arquivo",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"isUpdate": {
+										"value": {
+											"value": "1",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaFinal": {
+										"value": {
+											"value": "@concat('RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoIni": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.dataRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoFim": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.dataWritten",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasIni": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.rowsRead",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasFim": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.rowsCopied",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasRej": {
+										"value": {
+											"value": "@activity('Converte Arquivos para Parquet').output.rowsSkipped",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaInicial": {
+										"value": null,
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
 							"name": "Insere Log Inicio",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
 									"activity": "Verifica Arquivo foi processado",
 									"dependencyConditions": [
-										"Succeeded"
+										"Failed"
 									]
 								}
 							],
@@ -128,436 +857,8 @@
 								"referenceName": "ConexaoBanco",
 								"type": "LinkedServiceReference"
 							}
-						},
-						{
-							"name": "Verifica Arquivo foi processado",
-							"type": "Lookup",
-							"dependsOn": [
-								{
-									"activity": "PreencheNomeArquivo",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"source": {
-									"type": "AzureSqlSource",
-									"sqlReaderQuery": {
-										"value": "DECLARE @A varchar(30)\n\nselect top 1 @A=tmp.A --as Prosseguir  \nFROM\n(\n\tSELECT 'N' as A\n\tfrom dbo.logprocessamento with(nolock)\n\twhere NomeArquivo = '@{item().name}'\n\tand Status = 'Sucessoa' \n\tand Camada = 'STAGE'\n\tUNION ALL\n\tSELECT 'S' as A\n) tmp\norder by A\n\nIF @A = 'N'\nBEGIN\n\tRAISERROR ('Arquivo Já Processado',16,1)\nEND\nELSE\nBEGIN\n\tSELECT 'S' as Prosseguir\nEND",
-										"type": "Expression"
-									},
-									"queryTimeout": "02:00:00",
-									"partitionOption": "None"
-								},
-								"dataset": {
-									"referenceName": "LogProcessamento",
-									"type": "DatasetReference"
-								},
-								"firstRowOnly": false
-							}
-						},
-						{
-							"name": "Dropa External Table",
-							"type": "SqlServerStoredProcedure",
-							"dependsOn": [
-								{
-									"activity": "Insere Log Inicio",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_DropExternalTable]",
-								"storedProcedureParameters": {
-									"NomeTabela": {
-										"value": {
-											"value": "@concat(item().name,'')",
-											"type": "Expression"
-										},
-										"type": "String"
-									}
-								}
-							},
-							"linkedServiceName": {
-								"referenceName": "linkedService1",
-								"type": "LinkedServiceReference"
-							}
-						},
-						{
-							"name": "Cria External Table",
-							"type": "SqlServerStoredProcedure",
-							"dependsOn": [
-								{
-									"activity": "Dropa External Table",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_CriaExternalTableCSV_ADW3]",
-								"storedProcedureParameters": {
-									"campos": {
-										"value": {
-											"value": "NF varchar (250),\nOperacao varchar (250),\nCliente varchar (250),\nCodCliente varchar (250),\nVendedor varchar (250),\nCodVendedor varchar (250),\nProdDescricao varchar (250),\nCodigoProduto varchar (250),\nMarca varchar (250),\nFornecedor varchar (250),\nGrupoSubgrupo varchar (250),\nData varchar (250),\nQtde varchar (250),\nVdaBruta varchar (250),\nMediaUm varchar (250),\nICMS varchar (250),\nPisConfins varchar (250),\nOutros varchar (250),\nCusto varchar (250),\nFrete varchar (250),\nDespAces varchar (250),\nComissao varchar (250),\nLucroBruto varchar (250),\nPercLucro varchar (250),\nPercVenda varchar (250)",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"nomearquivo": {
-										"value": {
-											"value": "@concat('/RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"NomeTabela": {
-										"value": {
-											"value": "@concat('[dbo].[',item().name,']')",
-											"type": "Expression"
-										},
-										"type": "String"
-									}
-								}
-							},
-							"linkedServiceName": {
-								"referenceName": "linkedService1",
-								"type": "LinkedServiceReference"
-							}
-						},
-						{
-							"name": "PreencheNomeArquivo",
-							"type": "SetVariable",
-							"dependsOn": [],
-							"userProperties": [],
-							"typeProperties": {
-								"variableName": "NomeUtilizado",
-								"value": {
-									"value": "@replace(item().name,'.TXT','.parquet')",
-									"type": "Expression"
-								}
-							}
-						},
-						{
-							"name": "Cria Table Tmp Relatorio",
-							"type": "SqlServerStoredProcedure",
-							"dependsOn": [
-								{
-									"activity": "Cria External Table",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_CarregaEsteiraRelatorioABC]",
-								"storedProcedureParameters": {
-									"NomeTabela": {
-										"value": {
-											"value": "@concat(item().name)",
-											"type": "Expression"
-										},
-										"type": "String"
-									}
-								}
-							},
-							"linkedServiceName": {
-								"referenceName": "linkedService1",
-								"type": "LinkedServiceReference"
-							}
-						},
-						{
-							"name": "Insere Fato Relatorio",
-							"type": "SqlServerStoredProcedure",
-							"dependsOn": [
-								{
-									"activity": "Cria Table Tmp Relatorio",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_InsereEsteiraRelatorioABC]",
-								"storedProcedureParameters": {
-									"NomeTabela": {
-										"value": {
-											"value": "@concat(item().name,'CARGA')",
-											"type": "Expression"
-										},
-										"type": "String"
-									}
-								}
-							},
-							"linkedServiceName": {
-								"referenceName": "linkedService1",
-								"type": "LinkedServiceReference"
-							}
-						},
-						{
-							"name": "Atualiza Log Sucesso",
-							"type": "SqlServerStoredProcedure",
-							"dependsOn": [
-								{
-									"activity": "Insere Fato Relatorio",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_InsereLogProcessamento]",
-								"storedProcedureParameters": {
-									"NomePipeline": {
-										"value": {
-											"value": "@pipeline().Pipeline",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"Camada": {
-										"value": {
-											"value": "CURATED",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"nomearquivo": {
-										"value": {
-											"value": "@{item().name}",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"Status": {
-										"value": {
-											"value": "Sucesso",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"Detalhe": {
-										"value": {
-											"value": "Dados enviado para FATO com Sucesso",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"isUpdate": {
-										"value": {
-											"value": "1",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"HierarquiaFinal": {
-										"value": {
-											"value": "@replace( concat( 'DELIVERY',pipeline().parameters.Hierarquia, pipeline().parameters.Ano, '/', pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name), 'parquet', 'csv' )",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"TamanhoArquivoIni": {
-										"value": "0",
-										"type": "String"
-									},
-									"TamanhoArquivoFim": {
-										"value": "0",
-										"type": "String"
-									},
-									"QtdLinhasIni": {
-										"value": {
-											"value": "0",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"QtdLinhasFim": {
-										"value": {
-											"value": "0",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"QtdLinhasRej": {
-										"value": {
-											"value": "0",
-											"type": "Expression"
-										},
-										"type": "String"
-									},
-									"HierarquiaInicial": {
-										"value": null,
-										"type": "String"
-									}
-								}
-							},
-							"linkedServiceName": {
-								"referenceName": "ConexaoBanco",
-								"type": "LinkedServiceReference"
-							}
-						},
-						{
-							"name": "Dropa External Table_copy1",
-							"type": "SqlServerStoredProcedure",
-							"dependsOn": [
-								{
-									"activity": "Atualiza Log Sucesso",
-									"dependencyConditions": [
-										"Completed"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_DropExternalTable]",
-								"storedProcedureParameters": {
-									"NomeTabela": {
-										"value": {
-											"value": "@concat(item().name)",
-											"type": "Expression"
-										},
-										"type": "String"
-									}
-								}
-							},
-							"linkedServiceName": {
-								"referenceName": "linkedService1",
-								"type": "LinkedServiceReference"
-							}
-						},
-						{
-							"name": "Dropa External Table_copy2",
-							"type": "SqlServerStoredProcedure",
-							"dependsOn": [
-								{
-									"activity": "Dropa External Table_copy1",
-									"dependencyConditions": [
-										"Succeeded"
-									]
-								}
-							],
-							"policy": {
-								"timeout": "7.00:00:00",
-								"retry": 0,
-								"retryIntervalInSeconds": 30,
-								"secureOutput": false,
-								"secureInput": false
-							},
-							"userProperties": [],
-							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_DropTable]",
-								"storedProcedureParameters": {
-									"NomeTabela": {
-										"value": {
-											"value": "@concat(item().name,'CARGA')",
-											"type": "Expression"
-										},
-										"type": "String"
-									}
-								}
-							},
-							"linkedServiceName": {
-								"referenceName": "linkedService1",
-								"type": "LinkedServiceReference"
-							}
 						}
 					]
-				}
-			},
-			{
-				"name": "Verifica_Arquivos_Raw",
-				"type": "GetMetadata",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataset": {
-						"referenceName": "ADLBlob",
-						"type": "DatasetReference",
-						"parameters": {
-							"Directory": {
-								"value": "@concat('RAW',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia)",
-								"type": "Expression"
-							},
-							"Container": "storagemasteragro"
-						}
-					},
-					"fieldList": [
-						"childItems"
-					],
-					"storeSettings": {
-						"type": "AzureBlobFSReadSettings",
-						"recursive": true,
-						"enablePartitionDiscovery": false
-					},
-					"formatSettings": {
-						"type": "DelimitedTextReadSettings",
-						"skipLineCount": 0
-					}
 				}
 			}
 		],
@@ -583,23 +884,31 @@
 				"defaultValue": ";"
 			},
 			"RowsToSkip": {
+				"type": "int",
+				"defaultValue": 1
+			},
+			"Encoding": {
 				"type": "string",
-				"defaultValue": "1"
+				"defaultValue": "UTF-8"
+			},
+			"TipoCompressao": {
+				"type": "string",
+				"defaultValue": "none"
+			},
+			"QuoteCharacter": {
+				"type": "string",
+				"defaultValue": " "
 			}
 		},
 		"variables": {
 			"NomeArquivo": {
-				"type": "String"
-			},
-			"NomeUtilizado": {
 				"type": "String"
 			}
 		},
 		"folder": {
 			"name": "ExecuçãoMasterData/STAGE"
 		},
-		"annotations": [],
-		"lastPublishTime": "2022-06-03T18:11:00Z"
+		"annotations": []
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
