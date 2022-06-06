@@ -1,5 +1,5 @@
 {
-	"name": "stagesteste",
+	"name": "PL_DELIMITADO_STAGE",
 	"properties": {
 		"activities": [
 			{
@@ -577,6 +577,14 @@
 			"Hierarquia": {
 				"type": "string",
 				"defaultValue": "/RelatorioABC/"
+			},
+			"Delimitador": {
+				"type": "string",
+				"defaultValue": ";"
+			},
+			"RowsToSkip": {
+				"type": "string",
+				"defaultValue": "1"
 			}
 		},
 		"variables": {
