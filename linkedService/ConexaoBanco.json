@@ -5,8 +5,8 @@
 		"annotations": [],
 		"type": "AzureSqlDatabase",
 		"typeProperties": {
-			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=agroops.database.windows.net;initial catalog=materdata;user id=agroadm",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDI1RjdENUM5LTcwNkQtNDk3RC1CMUE4LTk3RTREMDk5NUZFRF8zYTJkZDkyYi1kM2Y2LTRmMzMtOWIxYS05NzA4YzQ2MGIwNDAiDQp9"
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=agroops.database.windows.net;initial catalog=masterdata;user id=agroadm",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDI1RjdENUM5LTcwNkQtNDk3RC1CMUE4LTk3RTREMDk5NUZFRF9hM2JkMjg3MC1hYTM5LTQwZTItOWVjYy0zZGJlOTAxODcwMDIiDQp9"
 		}
 	}
 }
