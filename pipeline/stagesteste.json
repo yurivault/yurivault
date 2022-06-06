@@ -1,0 +1,9 @@
+{
+	"name": "stagesteste",
+	"properties": {
+		"folder": {
+			"name": "ExecuçãoMasterData/STAGE"
+		},
+		"annotations": []
+	}
+}
