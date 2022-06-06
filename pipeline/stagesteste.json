@@ -1497,19 +1497,19 @@
 		"parameters": {
 			"Ano": {
 				"type": "string",
-				"defaultValue": "2021"
+				"defaultValue": "2022"
 			},
 			"Mes": {
 				"type": "string",
-				"defaultValue": "03"
+				"defaultValue": "06"
 			},
 			"Dia": {
 				"type": "string",
-				"defaultValue": "12"
+				"defaultValue": "06"
 			},
 			"Hierarquia": {
 				"type": "string",
-				"defaultValue": "/Berkley/Emissoes/"
+				"defaultValue": "/RelatorioABC/"
 			}
 		},
 		"variables": {
@@ -1521,7 +1521,7 @@
 			}
 		},
 		"folder": {
-			"name": "ExecuçãoMestre/STAGE"
+			"name": "ExecuçãoMasterData/STAGE"
 		},
 		"annotations": [],
 		"lastPublishTime": "2022-06-03T18:11:00Z"
