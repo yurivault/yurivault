@@ -276,7 +276,7 @@
 								"storedProcedureParameters": {
 									"campos": {
 										"value": {
-											"value": "NF varchar (250),\nOperacao varchar (250),\nCliente varchar (250),\nCodCliente varchar (250),\nVendedor varchar (250),\nCodVendedor varchar (250),\nProdDescricao varchar (250),\nCodigoProduto varchar (250),\nMarca varchar (250),\nFornecedor varchar (250),\nGrupoSubgrupo varchar (250),\nData varchar (250),\nQtde varchar (250),\nVdaBruta varchar (250),\nMediaUm varchar (250),\nICMS varchar (250),\nPisConfins varchar (250),\nOutros varchar (250),\nCusto varchar (250),\nFrete varchar (250),\nDespAces varchar (250),\nComissao varchar (250),\nLucroBruto varchar (250),\nPercLucro varchar (250),\nPercVenda varchar (250)",
+											"value": "NF varchar(8000)",
 											"type": "Expression"
 										},
 										"type": "String"
@@ -301,6 +301,115 @@
 								"referenceName": "linkedService1",
 								"type": "LinkedServiceReference"
 							}
+						},
+						{
+							"name": "Converte Arquivos para Parquet",
+							"type": "Copy",
+							"dependsOn": [
+								{
+									"activity": "Cria External Table 1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": "@replace(concat(' \nWITH\n    C\n    AS  \n    (\n        SELECT NF , value , ROW_NUMBER() OVER(PARTITION BY NF ORDER BY (SELECT NULL)) as rn\n        FROM [dbo].[',item().name,']  CROSS APPLY STRING_SPLIT(NF, '';'') AS BK\n    )\nSELECT [1] AS Indice \n     , [2] AS Nao_Identificado_02\n     , [3] AS Nao_Identificado_03\n     , [4] AS DtEfetivacao \n     , [5] AS NrRecibo \n     , [6] AS Nao_Identificado_06\n\t , [7] AS NmSegurado\n\t , [8] AS Nao_Identificado_08\n\t , [9] AS Nao_Identificado_09\n\t , [10] AS Nao_Identificado_10\n\t , [11] AS Nao_Identificado_11\n\t , [12] AS NumeroApolice\n\t , [13] AS NumeroEndosso\n\t , [14] AS Nao_Identificado_14\n\t , [15] AS Vlbase\n\t , [16] AS PercentualComissao\n\t , [17] AS ValorComissao\n\t , [18] AS NumeroParcela\n\t , [19] AS Nao_Identificado_18\n\t , [20] AS Nao_Identificado_19\n\t , [21] AS Nao_Identificado_18231\n\t , [22] AS Nao_Identificado_12318\n\t , [23] AS Nao_Identificado_18123\n\t , [24] AS Nao_Identificado_1812133\n\t , [25] AS Nao_Identificado_1831\nFROM C PIVOT( MAX(VALUE) FOR RN IN([1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12],[13],[14],[15],[16],[17],[18],[19],[20],[21],[22],[23],[24],[25]) ) as PVT\n'),'\\','''')",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"enableSkipIncompatibleRow": true,
+								"logSettings": {
+									"enableCopyActivityLog": true,
+									"copyActivityLogSettings": {
+										"logLevel": "Warning",
+										"enableReliableLogging": false
+									},
+									"logLocationSettings": {
+										"linkedServiceName": {
+											"referenceName": "AzureDataLakeStorage1",
+											"type": "LinkedServiceReference"
+										},
+										"path": {
+											"value": "@concat('storagemaster','/','FAILURE','/',variables('NomeArquivo'))",
+											"type": "Expression"
+										}
+									}
+								},
+								"dataIntegrationUnits": 2,
+								"translator": {
+									"type": "TabularTranslator",
+									"mappings": [
+										{
+											"source": {
+												"name": "sad"
+											},
+											"sink": {
+												"name": "sdaasd"
+											}
+										},
+										{
+											"source": {
+												"name": "asdasd"
+											},
+											"sink": {
+												"name": "adsasd"
+											}
+										},
+										{
+											"source": {
+												"name": "asddas"
+											},
+											"sink": {
+												"name": "dasasd"
+											}
+										}
+									]
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "AzureSqlTable1",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ConversaoParquetNome",
+									"type": "DatasetReference",
+									"parameters": {
+										"Directory": {
+											"value": "@concat('STAGE',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia)",
+											"type": "Expression"
+										},
+										"Container": "storagemasteragro",
+										"FileName": {
+											"value": "@replace(replace(replace(toLower(item().name),'.csv','.parquet'),'.txt','.parquet'),'.zip','.parquet')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
 						}
 					]
 				}
