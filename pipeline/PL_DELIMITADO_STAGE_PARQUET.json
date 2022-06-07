@@ -153,7 +153,7 @@
 											"value": "@pipeline().parameters.TipoCompressao",
 											"type": "Expression"
 										},
-										"QuoteCharacter": " "
+										"QuoteCharacter": " \""
 									}
 								}
 							],
@@ -646,7 +646,7 @@
 			},
 			"QuoteCharacter": {
 				"type": "string",
-				"defaultValue": " "
+				"defaultValue": " \""
 			}
 		},
 		"variables": {
