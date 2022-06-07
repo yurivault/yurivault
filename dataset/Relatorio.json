@@ -68,6 +68,10 @@
 				"name": "PercVenda",
 				"type": "varchar"
 			}
-		]
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "fato_relatorio"
+		}
 	}
 }
