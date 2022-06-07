@@ -638,7 +638,7 @@
 			},
 			"Encoding": {
 				"type": "string",
-				"defaultValue": "UTF-8"
+				"defaultValue": "latin1"
 			},
 			"TipoCompressao": {
 				"type": "string",
