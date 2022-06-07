@@ -362,26 +362,252 @@
 									"mappings": [
 										{
 											"source": {
-												"name": "sad"
+												"name": "Indice",
+												"type": "String"
 											},
 											"sink": {
-												"name": "sdaasd"
+												"name": "Indice",
+												"type": "String"
 											}
 										},
 										{
 											"source": {
-												"name": "asdasd"
+												"name": "Nao_Identificado_02",
+												"type": "String"
 											},
 											"sink": {
-												"name": "adsasd"
+												"name": "Nao_Identificado_02",
+												"type": "String"
 											}
 										},
 										{
 											"source": {
-												"name": "asddas"
+												"name": "Nao_Identificado_03",
+												"type": "String"
 											},
 											"sink": {
-												"name": "dasasd"
+												"name": "Nao_Identificado_03",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "DtEfetivacao",
+												"type": "String"
+											},
+											"sink": {
+												"name": "DtEfetivacao",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "NrRecibo",
+												"type": "String"
+											},
+											"sink": {
+												"name": "NrRecibo",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "Nao_Identificado_06",
+												"type": "String"
+											},
+											"sink": {
+												"name": "Nao_Identificado_06",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "NmSegurado",
+												"type": "String"
+											},
+											"sink": {
+												"name": "NmSegurado",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "Nao_Identificado_08",
+												"type": "String"
+											},
+											"sink": {
+												"name": "Nao_Identificado_08",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "Nao_Identificado_09",
+												"type": "String"
+											},
+											"sink": {
+												"name": "Nao_Identificado_09",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "Nao_Identificado_10",
+												"type": "String"
+											},
+											"sink": {
+												"name": "Nao_Identificado_10",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "Nao_Identificado_11",
+												"type": "String"
+											},
+											"sink": {
+												"name": "Nao_Identificado_11",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "NumeroApolice",
+												"type": "String"
+											},
+											"sink": {
+												"name": "NumeroApolice",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "NumeroEndosso",
+												"type": "String"
+											},
+											"sink": {
+												"name": "NumeroEndosso",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "Nao_Identificado_14",
+												"type": "String"
+											},
+											"sink": {
+												"name": "Nao_Identificado_14",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "Vlbase",
+												"type": "String"
+											},
+											"sink": {
+												"name": "Vlbase",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "PercentualComissao",
+												"type": "String"
+											},
+											"sink": {
+												"name": "PercentualComissao",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "ValorComissao",
+												"type": "String"
+											},
+											"sink": {
+												"name": "ValorComissao",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "NumeroParcela",
+												"type": "String"
+											},
+											"sink": {
+												"name": "NumeroParcela",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "Nao_Identificado_18",
+												"type": "String"
+											},
+											"sink": {
+												"name": "Nao_Identificado_18",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "Nao_Identificado_19",
+												"type": "String"
+											},
+											"sink": {
+												"name": "Nao_Identificado_19",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "Nao_Identificado_18231",
+												"type": "String"
+											},
+											"sink": {
+												"name": "Nao_Identificado_18231",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "Nao_Identificado_12318",
+												"type": "String"
+											},
+											"sink": {
+												"name": "Nao_Identificado_12318",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "Nao_Identificado_18123",
+												"type": "String"
+											},
+											"sink": {
+												"name": "Nao_Identificado_18123",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "Nao_Identificado_1812133",
+												"type": "String"
+											},
+											"sink": {
+												"name": "Nao_Identificado_1812133",
+												"type": "String"
+											}
+										},
+										{
+											"source": {
+												"name": "Nao_Identificado_1831",
+												"type": "String"
+											},
+											"sink": {
+												"name": "Nao_Identificado_1831",
+												"type": "String"
 											}
 										}
 									]
