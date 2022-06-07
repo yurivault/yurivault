@@ -71,7 +71,7 @@
 		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "fato_relatorio"
+			"table": "fato_relatorio3"
 		}
 	}
 }
