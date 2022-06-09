@@ -258,11 +258,8 @@
 									"precision": 18
 								},
 								"sink": {
-									"name": "MediaUm",
-									"type": "Decimal",
-									"physicalType": "decimal",
-									"scale": 3,
-									"precision": 18
+									"name": "MediaUn",
+									"physicalType": "decimal"
 								}
 							},
 							{
