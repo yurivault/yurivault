@@ -211,6 +211,18 @@
 							},
 							{
 								"source": {
+									"name": "SubGrupo3",
+									"type": "String",
+									"physicalType": "nvarchar"
+								},
+								"sink": {
+									"name": "SubGrupo3",
+									"type": "String",
+									"physicalType": "nvarchar"
+								}
+							},
+							{
+								"source": {
 									"name": "Data",
 									"type": "DateTime",
 									"physicalType": "date"
@@ -250,16 +262,12 @@
 								}
 							},
 							{
-								"source": {
-									"name": "MediaUm",
-									"type": "Decimal",
-									"physicalType": "decimal",
-									"scale": 3,
-									"precision": 18
-								},
 								"sink": {
 									"name": "MediaUn",
-									"physicalType": "decimal"
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 3,
+									"precision": 18
 								}
 							},
 							{
