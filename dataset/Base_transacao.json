@@ -1,0 +1,172 @@
+{
+	"name": "Base_transacao",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ConexaoBanco",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Code",
+				"type": "varchar"
+			},
+			{
+				"name": "NF",
+				"type": "varchar"
+			},
+			{
+				"name": "Operacao",
+				"type": "varchar"
+			},
+			{
+				"name": "Cliente",
+				"type": "varchar"
+			},
+			{
+				"name": "CodCliente",
+				"type": "varchar"
+			},
+			{
+				"name": "Vendedor",
+				"type": "varchar"
+			},
+			{
+				"name": "CodVendedor",
+				"type": "varchar"
+			},
+			{
+				"name": "ProdDescricao",
+				"type": "varchar"
+			},
+			{
+				"name": "CodigoProduto",
+				"type": "varchar"
+			},
+			{
+				"name": "Marca",
+				"type": "varchar"
+			},
+			{
+				"name": "Fornecedor",
+				"type": "varchar"
+			},
+			{
+				"name": "CodigoGrupo",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Grupo",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SubGrupo1",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SubGrupo2",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Data",
+				"type": "date"
+			},
+			{
+				"name": "Quantidade",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "VdaBruta",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "MediaUn",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "ICMS",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "PisConfins",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "Outros",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "Custo",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "Frete",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "DespAces",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "Comissao",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "LucroBruto",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "PercLucro",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "PercVenda",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "Loja",
+				"type": "varchar"
+			},
+			{
+				"name": "NomeArquivo",
+				"type": "varchar"
+			},
+			{
+				"name": "ID",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "base_transacao"
+		}
+	}
+}
