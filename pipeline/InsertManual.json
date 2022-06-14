@@ -698,18 +698,6 @@
 							},
 							{
 								"source": {
-									"name": "SubGrupo3",
-									"type": "String",
-									"physicalType": "nvarchar"
-								},
-								"sink": {
-									"name": "SubGrupo3",
-									"type": "String",
-									"physicalType": "nvarchar"
-								}
-							},
-							{
-								"source": {
 									"name": "Data",
 									"type": "DateTime",
 									"physicalType": "date"
