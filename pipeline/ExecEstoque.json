@@ -22,7 +22,7 @@
 					{
 						"activity": "01-ExecucaoMasterdataRAW",
 						"dependencyConditions": [
-							"Succeeded"
+							"Completed"
 						]
 					}
 				],
