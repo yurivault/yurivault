@@ -41,7 +41,7 @@
 				}
 			},
 			{
-				"name": "PL_DELIMITADO_CURATED",
+				"name": "PL_ESTOQUE_CURATED",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
@@ -54,18 +54,18 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "PL_RELATORIOABC_CURATED",
+						"referenceName": "PL_ESTOQUE_CURATED",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
 				}
 			},
 			{
-				"name": "InsertManual",
+				"name": "InsertEstoque",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "PL_DELIMITADO_CURATED",
+						"activity": "PL_ESTOQUE_CURATED",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -74,7 +74,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "InsertRelatorioABC",
+						"referenceName": "InsertEstoque",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
