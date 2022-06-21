@@ -57,7 +57,10 @@
 						"referenceName": "PL_ESTOQUE_CURATED",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"Dia": "21"
+					}
 				}
 			},
 			{
