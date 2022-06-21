@@ -23,7 +23,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"pipeline": {
-											"referenceName": "PL_DELIMITADO_CURATED",
+											"referenceName": "PL_RELATORIOABC_CURATED",
 											"type": "PipelineReference"
 										},
 										"waitOnCompletion": true,
