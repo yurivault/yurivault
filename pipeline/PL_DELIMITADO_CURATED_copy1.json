@@ -276,7 +276,7 @@
 								"storedProcedureParameters": {
 									"campos": {
 										"value": {
-											"value": "NF varchar (8000)",
+											"value": "Descricao varchar (250),\nCodigo varchar (250),\nNcm varchar (250),\nQtde varchar (250),\nValor varchar (250),\nPeso varchar (250),\nPorcentagem varchar (250)\n\n",
 											"type": "Expression"
 										},
 										"type": "String"
