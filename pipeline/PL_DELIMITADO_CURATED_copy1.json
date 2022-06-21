@@ -5,14 +5,7 @@
 			{
 				"name": "Verifica_Arquivos_Stage",
 				"type": "GetMetadata",
-				"dependsOn": [
-					{
-						"activity": "Stored procedure1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -310,26 +303,6 @@
 							}
 						}
 					]
-				}
-			},
-			{
-				"name": "Stored procedure1",
-				"type": "SqlServerStoredProcedure",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "7.00:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"storedProcedureName": "[dbo].[proc_DeletaStage]"
-				},
-				"linkedServiceName": {
-					"referenceName": "linkedService1",
-					"type": "LinkedServiceReference"
 				}
 			}
 		],
