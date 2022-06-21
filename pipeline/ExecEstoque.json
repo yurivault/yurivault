@@ -1,0 +1,84 @@
+{
+	"name": "ExecEstoque",
+	"properties": {
+		"activities": [
+			{
+				"name": "01-ExecucaoMasterdataRAW",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "01-ExecucaoMasterdataRAW",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_DELIMITADO_STAGE_PARQUET",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "01-ExecucaoMasterdataRAW",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DELIMITADO_STAGE_PARQUET",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Hierarquia": "/Estoque/"
+					}
+				}
+			},
+			{
+				"name": "PL_DELIMITADO_CURATED",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_DELIMITADO_STAGE_PARQUET",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_RELATORIOABC_CURATED",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "InsertManual",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_DELIMITADO_CURATED",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "InsertRelatorioABC",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"annotations": []
+	}
+}
