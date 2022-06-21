@@ -1,0 +1,69 @@
+{
+	"name": "FatoEstoqueDw",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ConexaoBanco",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Code",
+				"type": "varchar"
+			},
+			{
+				"name": "Descricao",
+				"type": "varchar"
+			},
+			{
+				"name": "Codigo",
+				"type": "varchar"
+			},
+			{
+				"name": "Ncm",
+				"type": "varchar"
+			},
+			{
+				"name": "Qtde",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "Valor",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "Peso",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "Porcentagem",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "Loja",
+				"type": "varchar"
+			},
+			{
+				"name": "NomeArquivo",
+				"type": "varchar"
+			},
+			{
+				"name": "Data",
+				"type": "date"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "fato_estoque"
+		}
+	}
+}
