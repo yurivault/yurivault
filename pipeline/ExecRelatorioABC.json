@@ -74,6 +74,26 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "TruncateLoadDimProduto",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "InsertManual",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "TruncateLoadDimProduto",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"annotations": []
