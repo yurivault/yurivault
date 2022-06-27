@@ -32,7 +32,10 @@
 						"referenceName": "PL_DELIMITADO_STAGE_PARQUET",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"Dia": "27"
+					}
 				}
 			},
 			{
@@ -52,7 +55,10 @@
 						"referenceName": "PL_RELATORIOABC_CURATED",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"Dia": "27"
+					}
 				}
 			},
 			{
