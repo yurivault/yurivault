@@ -52,7 +52,14 @@
 			{
 				"name": "Update",
 				"type": "SqlServerStoredProcedure",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Load",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -62,7 +69,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dbo].[proc_UpdateGeral]"
+					"storedProcedureName": "[dbo].[proc_UpdateDimProduto]"
 				},
 				"linkedServiceName": {
 					"referenceName": "ConexaoBanco",
