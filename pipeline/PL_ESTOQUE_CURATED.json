@@ -346,7 +346,7 @@
 							}
 						},
 						{
-							"name": "Insere Fato Relatorio",
+							"name": "Insere Fato Estoque",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
@@ -386,7 +386,7 @@
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Insere Fato Relatorio",
+									"activity": "Insere Fato Estoque",
 									"dependencyConditions": [
 										"Succeeded"
 									]
@@ -497,7 +497,7 @@
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [
 								{
-									"activity": "Insere Fato Relatorio",
+									"activity": "Insere Fato Estoque",
 									"dependencyConditions": [
 										"Failed"
 									]
