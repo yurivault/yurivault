@@ -221,7 +221,7 @@
 					"storedProcedureName": "[dbo].[proc_DeletaStageEstoque]"
 				},
 				"linkedServiceName": {
-					"referenceName": "FatoEstoque",
+					"referenceName": "ConexaoBanco",
 					"type": "LinkedServiceReference"
 				}
 			}
