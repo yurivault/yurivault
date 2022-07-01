@@ -5,7 +5,14 @@
 			{
 				"name": "PL_DELIMITADO_STAGE_PARQUET",
 				"type": "ExecutePipeline",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "01-ExecucaoMasterdataRAW",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
@@ -76,6 +83,19 @@
 				"typeProperties": {
 					"pipeline": {
 						"referenceName": "TruncateLoadDimProduto",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "01-ExecucaoMasterdataRAW",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "01-ExecucaoMasterdataRAW",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
