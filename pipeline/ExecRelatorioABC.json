@@ -21,7 +21,8 @@
 					},
 					"waitOnCompletion": true,
 					"parameters": {
-						"Dia": "30"
+						"Mes": "07",
+						"Dia": "01"
 					}
 				}
 			},
@@ -44,7 +45,8 @@
 					},
 					"waitOnCompletion": true,
 					"parameters": {
-						"Dia": "30"
+						"Mes": "07",
+						"Dia": "01"
 					}
 				}
 			},
