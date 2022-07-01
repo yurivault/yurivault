@@ -34,7 +34,8 @@
 					},
 					"waitOnCompletion": true,
 					"parameters": {
-						"Dia": "30",
+						"Mes": "07",
+						"Dia": "01",
 						"Hierarquia": "/Estoque/",
 						"Delimitador": ","
 					}
@@ -59,7 +60,8 @@
 					},
 					"waitOnCompletion": true,
 					"parameters": {
-						"Dia": "30"
+						"Mes": "07",
+						"Dia": "01"
 					}
 				}
 			},
