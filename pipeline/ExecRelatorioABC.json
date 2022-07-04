@@ -51,7 +51,7 @@
 				}
 			},
 			{
-				"name": "InsertManual",
+				"name": "InsertBase",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
@@ -75,7 +75,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "InsertManual",
+						"activity": "InsertBase",
 						"dependencyConditions": [
 							"Succeeded"
 						]
