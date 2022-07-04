@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "InsertFatoRelatorio",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -487,7 +487,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Copy data1",
+						"activity": "InsertFatoRelatorio",
 						"dependencyConditions": [
 							"Succeeded"
 						]
