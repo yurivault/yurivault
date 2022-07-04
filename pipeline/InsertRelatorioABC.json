@@ -483,7 +483,7 @@
 				]
 			},
 			{
-				"name": "Copy data1_copy1",
+				"name": "InsertBaseTransacao",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -962,7 +962,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "Copy data1_copy1",
+						"activity": "InsertBaseTransacao",
 						"dependencyConditions": [
 							"Succeeded"
 						]
