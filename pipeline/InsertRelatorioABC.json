@@ -958,7 +958,7 @@
 				]
 			},
 			{
-				"name": "Update",
+				"name": "UpdateFatoRelatorio",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
@@ -989,7 +989,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "Update",
+						"activity": "UpdateFatoRelatorio",
 						"dependencyConditions": [
 							"Succeeded"
 						]
