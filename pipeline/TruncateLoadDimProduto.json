@@ -50,7 +50,7 @@
 				}
 			},
 			{
-				"name": "Update",
+				"name": "UpdateProduto",
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
@@ -81,7 +81,7 @@
 				"type": "SqlServerStoredProcedure",
 				"dependsOn": [
 					{
-						"activity": "Update",
+						"activity": "UpdateProduto",
 						"dependencyConditions": [
 							"Succeeded"
 						]
