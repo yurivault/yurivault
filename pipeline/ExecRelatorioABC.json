@@ -22,7 +22,7 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"Mes": "07",
-						"Dia": "04"
+						"Dia": "06"
 					}
 				}
 			},
@@ -46,7 +46,7 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"Mes": "07",
-						"Dia": "04"
+						"Dia": "06"
 					}
 				}
 			},
