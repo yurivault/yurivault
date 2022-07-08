@@ -706,15 +706,15 @@
 			},
 			"Mes": {
 				"type": "string",
-				"defaultValue": "06"
+				"defaultValue": "07"
 			},
 			"Dia": {
 				"type": "string",
-				"defaultValue": "21"
+				"defaultValue": "08"
 			},
 			"Hierarquia": {
 				"type": "string",
-				"defaultValue": "/RelatorioABC/"
+				"defaultValue": "/Faturamento/"
 			}
 		},
 		"variables": {
