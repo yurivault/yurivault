@@ -276,7 +276,7 @@
 								"storedProcedureParameters": {
 									"campos": {
 										"value": {
-											"value": "Index varchar(250),\nDescricao varchar (250),\nCodigo varchar(250),\nQtde varchar (250),\nVdaBruta varchar (250),\nMediaUm varchar (250),\nICMS varchar (250),\nPisConfins varchar (250),\nOutros varchar (250),\nCusto varchar (250),\nFrete varchar (250),\nDespAces varchar (250),\nComissao varchar (250),\nLucroBruto varchar (250),\nPercLucro varchar (250),\nPercVenda varchar (250)",
+											"value": "FatId varchar(250),\nDescricao varchar(250),\nCodigo varchar(250),\nQtde varchar (250),\nVdaBruta varchar (250),\nMediaUm varchar (250),\nICMS varchar (250),\nPisConfins varchar (250),\nOutros varchar (250),\nCusto varchar (250),\nFrete varchar (250),\nDespAces varchar (250),\nComissao varchar (250),\nLucroBruto varchar (250),\nPercLucro varchar (250),\nPercVenda varchar (250)",
 											"type": "Expression"
 										},
 										"type": "String"
