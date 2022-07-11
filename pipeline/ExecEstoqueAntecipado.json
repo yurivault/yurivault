@@ -1,0 +1,91 @@
+{
+	"name": "ExecEstoqueAntecipado",
+	"properties": {
+		"activities": [
+			{
+				"name": "01-ExecucaoMasterdataRAW",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "01-ExecucaoMasterdataRAW",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_DELIMITADO_STAGE_PARQUET",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "01-ExecucaoMasterdataRAW",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DELIMITADO_STAGE_PARQUET",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Mes": "07",
+						"Dia": "11",
+						"Hierarquia": "/EstoqueAntecipado/",
+						"Delimitador": ","
+					}
+				}
+			},
+			{
+				"name": "PL_ESTOQUE_CURATED",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_DELIMITADO_STAGE_PARQUET",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_ESTOQUE_CURATED",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Mes": "07",
+						"Dia": "07"
+					}
+				}
+			},
+			{
+				"name": "InsertEstoque",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_ESTOQUE_CURATED",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "InsertEstoque",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"annotations": []
+	}
+}
