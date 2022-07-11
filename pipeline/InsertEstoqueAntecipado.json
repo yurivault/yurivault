@@ -200,7 +200,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "FatoEstoqueDw",
+						"referenceName": "FatoEstoqueAntecipadoDw",
 						"type": "DatasetReference"
 					}
 				]
