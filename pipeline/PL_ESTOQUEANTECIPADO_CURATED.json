@@ -301,6 +301,42 @@
 								"referenceName": "linkedService1",
 								"type": "LinkedServiceReference"
 							}
+						},
+						{
+							"name": "Cria Table Tmp Relatorio",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Cria External Table 1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[proc_CarregaEsteiraEstoqueAntecipado]",
+								"storedProcedureParameters": {
+									"NomeTabela": {
+										"value": {
+											"value": "@concat(item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "linkedService1",
+								"type": "LinkedServiceReference"
+							}
 						}
 					]
 				}
