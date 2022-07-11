@@ -706,15 +706,15 @@
 			},
 			"Mes": {
 				"type": "string",
-				"defaultValue": "06"
+				"defaultValue": "07"
 			},
 			"Dia": {
 				"type": "string",
-				"defaultValue": "20"
+				"defaultValue": "11"
 			},
 			"Hierarquia": {
 				"type": "string",
-				"defaultValue": "/Estoque/"
+				"defaultValue": "/EstoqueAntecipado/"
 			}
 		},
 		"variables": {
