@@ -42,19 +42,6 @@
 				}
 			},
 			{
-				"name": "InsertEstoque",
-				"type": "ExecutePipeline",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "InsertEstoque",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
 				"name": "PL_ESTOQUEANTECIPADO_CURATED",
 				"type": "ExecutePipeline",
 				"dependsOn": [
