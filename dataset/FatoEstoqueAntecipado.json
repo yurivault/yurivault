@@ -1,0 +1,87 @@
+{
+	"name": "FatoEstoqueAntecipado",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "FatoEstoque",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Code",
+				"type": "varchar"
+			},
+			{
+				"name": "Nota",
+				"type": "varchar"
+			},
+			{
+				"name": "Data",
+				"type": "date"
+			},
+			{
+				"name": "CdOperacao",
+				"type": "varchar"
+			},
+			{
+				"name": "Operacao",
+				"type": "varchar"
+			},
+			{
+				"name": "CdCliente",
+				"type": "varchar"
+			},
+			{
+				"name": "Cliente",
+				"type": "varchar"
+			},
+			{
+				"name": "CdVendedor",
+				"type": "varchar"
+			},
+			{
+				"name": "Vendedor",
+				"type": "varchar"
+			},
+			{
+				"name": "CdProduto",
+				"type": "varchar"
+			},
+			{
+				"name": "Produto",
+				"type": "varchar"
+			},
+			{
+				"name": "QtdeRemessa",
+				"type": "varchar"
+			},
+			{
+				"name": "QtdeBaixas",
+				"type": "varchar"
+			},
+			{
+				"name": "QtdePendente",
+				"type": "varchar"
+			},
+			{
+				"name": "VlrPendente",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "Loja",
+				"type": "varchar"
+			},
+			{
+				"name": "NomeArquivo",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "fato_estoqueantecipado"
+		}
+	}
+}
