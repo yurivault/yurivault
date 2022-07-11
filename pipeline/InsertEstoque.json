@@ -194,7 +194,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "FatoEstoqueAntecipado",
+						"referenceName": "FatoEstoque",
 						"type": "DatasetReference"
 					}
 				],
