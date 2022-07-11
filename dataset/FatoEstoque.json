@@ -63,7 +63,7 @@
 		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "fato_estoque"
+			"table": "fato_estoqueantecipado"
 		}
 	}
 }
