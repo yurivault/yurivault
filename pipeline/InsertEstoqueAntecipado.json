@@ -218,7 +218,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dbo].[proc_DeletaStageEstoque]"
+					"storedProcedureName": "[dbo].[proc_DeletaStageEstoqueAntecipado]"
 				},
 				"linkedServiceName": {
 					"referenceName": "ConexaoBanco",
