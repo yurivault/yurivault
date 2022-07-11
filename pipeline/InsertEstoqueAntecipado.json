@@ -50,98 +50,170 @@
 							},
 							{
 								"source": {
-									"name": "Descricao",
+									"name": "Nota",
 									"type": "String",
 									"physicalType": "varchar"
 								},
 								"sink": {
-									"name": "Descricao",
-									"type": "String",
-									"physicalType": "varchar"
-								}
-							},
-							{
-								"source": {
-									"name": "Codigo",
-									"type": "String",
-									"physicalType": "varchar"
-								},
-								"sink": {
-									"name": "Codigo",
+									"name": "Nota",
 									"type": "String",
 									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
-									"name": "Ncm",
+									"name": "Data",
+									"type": "DateTime",
+									"physicalType": "date"
+								},
+								"sink": {
+									"name": "Data",
+									"type": "DateTime",
+									"physicalType": "date"
+								}
+							},
+							{
+								"source": {
+									"name": "CdOperacao",
 									"type": "String",
 									"physicalType": "varchar"
 								},
 								"sink": {
-									"name": "Ncm",
+									"name": "CdOperacao",
 									"type": "String",
 									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
-									"name": "Qtde",
-									"type": "Decimal",
-									"physicalType": "decimal",
-									"scale": 3,
-									"precision": 18
+									"name": "Operacao",
+									"type": "String",
+									"physicalType": "varchar"
 								},
 								"sink": {
-									"name": "Qtde",
-									"type": "Decimal",
-									"physicalType": "decimal",
-									"scale": 3,
-									"precision": 18
+									"name": "Operacao",
+									"type": "String",
+									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
-									"name": "Valor",
-									"type": "Decimal",
-									"physicalType": "decimal",
-									"scale": 3,
-									"precision": 18
+									"name": "CdCliente",
+									"type": "String",
+									"physicalType": "varchar"
 								},
 								"sink": {
-									"name": "Valor",
-									"type": "Decimal",
-									"physicalType": "decimal",
-									"scale": 3,
-									"precision": 18
+									"name": "CdCliente",
+									"type": "String",
+									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
-									"name": "Peso",
-									"type": "Decimal",
-									"physicalType": "decimal",
-									"scale": 3,
-									"precision": 18
+									"name": "Cliente",
+									"type": "String",
+									"physicalType": "varchar"
 								},
 								"sink": {
-									"name": "Peso",
-									"type": "Decimal",
-									"physicalType": "decimal",
-									"scale": 3,
-									"precision": 18
+									"name": "Cliente",
+									"type": "String",
+									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
-									"name": "Porcentagem",
+									"name": "CdVendedor",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "CdVendedor",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Vendedor",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Vendedor",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "CdProduto",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "CdProduto",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "Produto",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Produto",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QtdeRemessa",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "QtdeRemessa",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QtdeBaixas",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "QtdeBaixas",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "QtdePendente",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "QtdePendente",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "VlrPendente",
 									"type": "Decimal",
 									"physicalType": "decimal",
 									"scale": 3,
 									"precision": 18
 								},
 								"sink": {
-									"name": "Porcentagem",
+									"name": "VlrPendente",
 									"type": "Decimal",
 									"physicalType": "decimal",
 									"scale": 3,
@@ -170,18 +242,6 @@
 									"name": "NomeArquivo",
 									"type": "String",
 									"physicalType": "varchar"
-								}
-							},
-							{
-								"source": {
-									"name": "Data",
-									"type": "DateTime",
-									"physicalType": "date"
-								},
-								"sink": {
-									"name": "Data",
-									"type": "DateTime",
-									"physicalType": "date"
 								}
 							}
 						],
