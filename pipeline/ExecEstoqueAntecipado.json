@@ -61,7 +61,8 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"Mes": "07",
-						"Dia": "07"
+						"Dia": "11",
+						"Hierarquia": "/EstoqueAntecipado/"
 					}
 				}
 			},
