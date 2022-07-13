@@ -35,7 +35,7 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"Mes": "07",
-						"Dia": "11",
+						"Dia": "13",
 						"Hierarquia": "/EstoqueAntecipado/",
 						"Delimitador": ";"
 					}
@@ -58,7 +58,10 @@
 						"referenceName": "PL_ESTOQUEANTECIPADO_CURATED",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"Dia": "13"
+					}
 				}
 			},
 			{
