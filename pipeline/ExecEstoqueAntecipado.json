@@ -60,6 +60,26 @@
 					},
 					"waitOnCompletion": true
 				}
+			},
+			{
+				"name": "InsertEstoqueAntecipado",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_ESTOQUEANTECIPADO_CURATED",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "InsertEstoqueAntecipado",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"annotations": []
