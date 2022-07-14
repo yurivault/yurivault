@@ -17,7 +17,7 @@
 						"Mes": "07",
 						"Dia": "14",
 						"Hierarquia": "/EstoqueAntecipado/",
-						"Delimitador": ";"
+						"Delimitador": ","
 					}
 				}
 			},
