@@ -170,6 +170,18 @@
 							},
 							{
 								"source": {
+									"name": "Medida",
+									"type": "String",
+									"physicalType": "varchar"
+								},
+								"sink": {
+									"name": "Medida",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
 									"name": "QtdeRemessa",
 									"type": "String",
 									"physicalType": "varchar"
