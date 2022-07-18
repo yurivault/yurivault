@@ -53,7 +53,20 @@
 				}
 			},
 			{
-				"name": "InsertBase",
+				"name": "01-ExecucaoMasterdataRAW",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "01-ExecucaoMasterdataRAW",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "InsertRelatorioABCVDA",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
@@ -66,40 +79,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "InsertRelatorioABC",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
-				"name": "TruncateLoadDimProduto",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "InsertBase",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "TruncateLoadDimProduto",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
-				"name": "01-ExecucaoMasterdataRAW",
-				"type": "ExecutePipeline",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "01-ExecucaoMasterdataRAW",
+						"referenceName": "InsertRelatorioABCVDA",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
