@@ -81,7 +81,7 @@
 		],
 		"typeProperties": {
 			"schema": "dbo",
-			"table": "fato_estoqueantecipado"
+			"table": "fato_relatoriovda"
 		}
 	}
 }
