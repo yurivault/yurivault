@@ -329,7 +329,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_CarregaEsteiraRelatorioABC]",
+								"storedProcedureName": "[dbo].[proc_CarregaEsteiraRelatorioABCVDA]",
 								"storedProcedureParameters": {
 									"NomeTabela": {
 										"value": {
@@ -365,7 +365,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"storedProcedureName": "[dbo].[proc_InsereEsteiraRelatorioABC]",
+								"storedProcedureName": "[dbo].[proc_InsereEsteiraRelatorioABCVDA]",
 								"storedProcedureParameters": {
 									"NomeTabela": {
 										"value": {
