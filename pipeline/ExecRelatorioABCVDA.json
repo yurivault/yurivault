@@ -5,14 +5,7 @@
 			{
 				"name": "PL_DELIMITADO_STAGE_PARQUET",
 				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "01-ExecucaoMasterdataRAW",
-						"dependencyConditions": [
-							"Completed"
-						]
-					}
-				],
+				"dependsOn": [],
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
@@ -28,7 +21,27 @@
 				}
 			},
 			{
-				"name": "PL_DELIMITADO_CURATED",
+				"name": "InsertRelatorioABCVDA",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_RELATORIOABCVDA_CURATED",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "InsertRelatorioABCVDA",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "PL_RELATORIOABCVDA_CURATED",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
@@ -41,45 +54,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "PL_RELATORIOABC_CURATED",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"Mes": "07",
-						"Dia": "15",
-						"Hierarquia": "/RelatorioABCVDA/"
-					}
-				}
-			},
-			{
-				"name": "01-ExecucaoMasterdataRAW",
-				"type": "ExecutePipeline",
-				"dependsOn": [],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "01-ExecucaoMasterdataRAW",
-						"type": "PipelineReference"
-					},
-					"waitOnCompletion": true
-				}
-			},
-			{
-				"name": "InsertRelatorioABCVDA",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "PL_DELIMITADO_CURATED",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "InsertRelatorioABCVDA",
+						"referenceName": "PL_RELATORIOABCVDA_CURATED",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
