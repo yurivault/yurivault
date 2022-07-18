@@ -691,7 +691,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[dbo].[proc_DeletaStage]"
+					"storedProcedureName": "[dbo].[proc_DeletaStageVDA]"
 				},
 				"linkedServiceName": {
 					"referenceName": "linkedService1",
