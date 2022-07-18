@@ -1,0 +1,109 @@
+{
+	"name": "ExecRelatorioABCVDA",
+	"properties": {
+		"activities": [
+			{
+				"name": "PL_DELIMITADO_STAGE_PARQUET",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "01-ExecucaoMasterdataRAW",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_DELIMITADO_STAGE_PARQUET",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Mes": "07",
+						"Dia": "13"
+					}
+				}
+			},
+			{
+				"name": "PL_DELIMITADO_CURATED",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_DELIMITADO_STAGE_PARQUET",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_RELATORIOABC_CURATED",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Mes": "07",
+						"Dia": "13"
+					}
+				}
+			},
+			{
+				"name": "InsertBase",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_DELIMITADO_CURATED",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "InsertRelatorioABC",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "TruncateLoadDimProduto",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "InsertBase",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "TruncateLoadDimProduto",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "01-ExecucaoMasterdataRAW",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "01-ExecucaoMasterdataRAW",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"annotations": []
+	}
+}
