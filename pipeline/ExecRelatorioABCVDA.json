@@ -57,7 +57,10 @@
 						"referenceName": "PL_RELATORIOABCVDA_CURATED",
 						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true
+					"waitOnCompletion": true,
+					"parameters": {
+						"Dia": "19"
+					}
 				}
 			}
 		],
