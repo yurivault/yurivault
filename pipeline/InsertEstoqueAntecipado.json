@@ -266,7 +266,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "FatoEstoqueAntecipado",
+						"referenceName": "AzureSqlTable2",
 						"type": "DatasetReference"
 					}
 				],
