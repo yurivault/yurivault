@@ -1,0 +1,91 @@
+{
+	"name": "AzureSqlTable3",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ConexaoBanco",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Code",
+				"type": "varchar"
+			},
+			{
+				"name": "Nota",
+				"type": "varchar"
+			},
+			{
+				"name": "Data",
+				"type": "date"
+			},
+			{
+				"name": "CdOperacao",
+				"type": "varchar"
+			},
+			{
+				"name": "DsOperacao",
+				"type": "varchar"
+			},
+			{
+				"name": "CdCliente",
+				"type": "varchar"
+			},
+			{
+				"name": "Cliente",
+				"type": "varchar"
+			},
+			{
+				"name": "CdVendedor",
+				"type": "varchar"
+			},
+			{
+				"name": "Vendedor",
+				"type": "varchar"
+			},
+			{
+				"name": "CdProduto",
+				"type": "varchar"
+			},
+			{
+				"name": "Produto",
+				"type": "varchar"
+			},
+			{
+				"name": "Medida",
+				"type": "varchar"
+			},
+			{
+				"name": "QtdRemessa",
+				"type": "varchar"
+			},
+			{
+				"name": "QtdBaixas",
+				"type": "varchar"
+			},
+			{
+				"name": "QtdPendente",
+				"type": "varchar"
+			},
+			{
+				"name": "ValorPendente",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "Loja",
+				"type": "varchar"
+			},
+			{
+				"name": "NomeArquivo",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "fato_estoqueantecipado"
+		}
+	}
+}
