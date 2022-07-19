@@ -35,7 +35,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "PL_ESTOQUE_CURATED",
+						"referenceName": "PL_ESTOQUEANTECIPADO_CURATED",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true,
