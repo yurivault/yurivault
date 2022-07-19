@@ -15,8 +15,8 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"Mes": "07",
-						"Dia": "18",
-						"Hierarquia": "/Estoque/",
+						"Dia": "19",
+						"Hierarquia": "/EstoqueAntecipado/",
 						"Delimitador": ","
 					}
 				}
