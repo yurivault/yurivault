@@ -86,12 +86,12 @@
 							},
 							{
 								"source": {
-									"name": "Operacao",
+									"name": "DsOperacao",
 									"type": "String",
 									"physicalType": "varchar"
 								},
 								"sink": {
-									"name": "Operacao",
+									"name": "DsOperacao",
 									"type": "String",
 									"physicalType": "varchar"
 								}
@@ -182,50 +182,50 @@
 							},
 							{
 								"source": {
-									"name": "QtdeRemessa",
+									"name": "QtdRemessa",
 									"type": "String",
 									"physicalType": "varchar"
 								},
 								"sink": {
-									"name": "QtdeRemessa",
+									"name": "QtdRemessa",
 									"type": "String",
 									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
-									"name": "QtdeBaixas",
+									"name": "QtdBaixas",
 									"type": "String",
 									"physicalType": "varchar"
 								},
 								"sink": {
-									"name": "QtdeBaixas",
+									"name": "QtdBaixas",
 									"type": "String",
 									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
-									"name": "QtdePendente",
+									"name": "QtdPendente",
 									"type": "String",
 									"physicalType": "varchar"
 								},
 								"sink": {
-									"name": "QtdePendente",
+									"name": "QtdPendente",
 									"type": "String",
 									"physicalType": "varchar"
 								}
 							},
 							{
 								"source": {
-									"name": "VlrPendente",
+									"name": "ValorPendente",
 									"type": "Decimal",
 									"physicalType": "decimal",
 									"scale": 3,
 									"precision": 18
 								},
 								"sink": {
-									"name": "VlrPendente",
+									"name": "ValorPendente",
 									"type": "Decimal",
 									"physicalType": "decimal",
 									"scale": 3,
