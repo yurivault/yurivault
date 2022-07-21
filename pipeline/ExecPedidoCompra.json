@@ -45,6 +45,26 @@
 						"Hierarquia": "/PedidoCompra/"
 					}
 				}
+			},
+			{
+				"name": "InsertPedidoCompra",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "PL_PEDIDOCOMPRA_CURATED",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "InsertPedidoCompra",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
 			}
 		],
 		"annotations": []
