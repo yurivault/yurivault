@@ -337,6 +337,336 @@
 								"referenceName": "linkedService1",
 								"type": "LinkedServiceReference"
 							}
+						},
+						{
+							"name": "Insere Fato Estoque",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Cria Table Tmp Relatorio",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[proc_InsereEsteiraPedidoCompra]",
+								"storedProcedureParameters": {
+									"NomeTabela": {
+										"value": {
+											"value": "@concat(item().name,'CARGA')",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "linkedService1",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Atualiza Log Sucesso",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Insere Fato Estoque",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[proc_InsereLogProcessamento]",
+								"storedProcedureParameters": {
+									"NomePipeline": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Camada": {
+										"value": {
+											"value": "CURATED",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": {
+											"value": "Sucesso",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Detalhe": {
+										"value": {
+											"value": "Dados enviado para FATO com Sucesso",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"isUpdate": {
+										"value": {
+											"value": "1",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaFinal": {
+										"value": {
+											"value": "@replace( concat( 'DELIVERY',pipeline().parameters.Hierarquia, pipeline().parameters.Ano, '/', pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name), 'parquet', 'csv' )",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoIni": {
+										"value": "0",
+										"type": "String"
+									},
+									"TamanhoArquivoFim": {
+										"value": "0",
+										"type": "String"
+									},
+									"QtdLinhasIni": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasFim": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasRej": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaInicial": {
+										"value": null,
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Atualiza Log Falha",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Insere Fato Estoque",
+									"dependencyConditions": [
+										"Failed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[proc_InsereLogProcessamento]",
+								"storedProcedureParameters": {
+									"NomePipeline": {
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Camada": {
+										"value": {
+											"value": "CURATED",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"nomearquivo": {
+										"value": {
+											"value": "@{item().name}",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Status": {
+										"value": {
+											"value": "Falha",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"Detalhe": {
+										"value": {
+											"value": "Falha na conversão do arquivo",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"isUpdate": {
+										"value": {
+											"value": "1",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaFinal": {
+										"value": {
+											"value": "@concat('STAGE',pipeline().parameters.Hierarquia,pipeline().parameters.Ano,'/',pipeline().parameters.Mes,'/',pipeline().parameters.Dia,'/',item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"TamanhoArquivoIni": {
+										"value": "0",
+										"type": "String"
+									},
+									"TamanhoArquivoFim": {
+										"value": "0",
+										"type": "String"
+									},
+									"QtdLinhasIni": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasFim": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"QtdLinhasRej": {
+										"value": {
+											"value": "0",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"HierarquiaInicial": {
+										"value": null,
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "ConexaoBanco",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Dropa External Table_copy1",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Atualiza Log Sucesso",
+									"dependencyConditions": [
+										"Completed"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[proc_DropExternalTable]",
+								"storedProcedureParameters": {
+									"NomeTabela": {
+										"value": {
+											"value": "@concat(item().name)",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "linkedService1",
+								"type": "LinkedServiceReference"
+							}
+						},
+						{
+							"name": "Dropa External Table_copy2",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [
+								{
+									"activity": "Dropa External Table_copy1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "7.00:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[proc_DropTable]",
+								"storedProcedureParameters": {
+									"NomeTabela": {
+										"value": {
+											"value": "@concat(item().name,'CARGA')",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "linkedService1",
+								"type": "LinkedServiceReference"
+							}
 						}
 					]
 				}
