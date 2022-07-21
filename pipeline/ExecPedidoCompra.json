@@ -16,7 +16,7 @@
 					"parameters": {
 						"Mes": "07",
 						"Dia": "20",
-						"Hierarquia": "/EstoqueAntecipado/",
+						"Hierarquia": "/PedidoCompra/",
 						"Delimitador": ","
 					}
 				}
