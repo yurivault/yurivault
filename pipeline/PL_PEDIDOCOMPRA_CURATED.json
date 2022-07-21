@@ -276,7 +276,7 @@
 								"storedProcedureParameters": {
 									"campos": {
 										"value": {
-											"value": "Nota varchar (250),\nData varchar (250),\nCdOperacao varchar (250),\nDsOperacao varchar (250),\nCdCliente varchar (250),\nCliente varchar (250),\nCdVendedor varchar (250),\nVendedor varchar (250),\nCdProduto varchar (250),\nProduto varchar (250),\nMedida varchar (250),\nQtdRemessa varchar (250),\nQtdBaixas varchar (250),\nQtdPendente varchar (250),\nVlrPendente varchar (250)\n\n",
+											"value": "Codigo varchar (250),\nDescricao varchar (250),\nQuantidade varchar (250),\nCustoUnitario varchar (250),\nValorTotal varchar (250),\nMediaSaidas varchar (250),\nEstoqueAtual varchar (250),\nPedidoCpa varchar (250),\nFatAntecipado varchar (250)",
 											"type": "Expression"
 										},
 										"type": "String"
