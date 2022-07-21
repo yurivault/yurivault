@@ -22,7 +22,7 @@
 				}
 			},
 			{
-				"name": "PL_ESTOQUEANTECIPADO_CURATED",
+				"name": "PL_PEDIDOCOMPRA_CURATED",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
@@ -51,7 +51,7 @@
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "PL_ESTOQUEANTECIPADO_CURATED",
+						"activity": "PL_PEDIDOCOMPRA_CURATED",
 						"dependencyConditions": [
 							"Succeeded"
 						]
