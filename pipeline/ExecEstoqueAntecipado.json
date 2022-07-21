@@ -47,7 +47,7 @@
 				}
 			},
 			{
-				"name": "InsertPedidoCompra",
+				"name": "InsertEstoqueAntecipado",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
@@ -60,7 +60,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"pipeline": {
-						"referenceName": "InsertPedidoCompra",
+						"referenceName": "InsertEstoqueAntecipado",
 						"type": "PipelineReference"
 					},
 					"waitOnCompletion": true
