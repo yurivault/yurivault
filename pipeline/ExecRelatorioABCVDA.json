@@ -15,7 +15,7 @@
 					"waitOnCompletion": true,
 					"parameters": {
 						"Mes": "07",
-						"Dia": "20",
+						"Dia": "21",
 						"Hierarquia": "/RelatorioABCVDA/"
 					}
 				}
@@ -59,7 +59,7 @@
 					},
 					"waitOnCompletion": true,
 					"parameters": {
-						"Dia": "20"
+						"Dia": "21"
 					}
 				}
 			}
