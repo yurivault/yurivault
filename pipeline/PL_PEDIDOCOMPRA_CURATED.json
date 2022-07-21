@@ -353,7 +353,7 @@
 			},
 			"Dia": {
 				"type": "string",
-				"defaultValue": "20"
+				"defaultValue": "21"
 			},
 			"Hierarquia": {
 				"type": "string",
