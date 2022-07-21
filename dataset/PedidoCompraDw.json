@@ -1,0 +1,79 @@
+{
+	"name": "PedidoCompraDw",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ConexaoBanco",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Code",
+				"type": "varchar"
+			},
+			{
+				"name": "Codigo",
+				"type": "varchar"
+			},
+			{
+				"name": "Descricao",
+				"type": "varchar"
+			},
+			{
+				"name": "Quantidade",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "CustoUnitario",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "ValorTotal",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "MediaSaidas",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "EstoqueAtual",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "PedidoCpa",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "FatAntecipado",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 3
+			},
+			{
+				"name": "Loja",
+				"type": "varchar"
+			},
+			{
+				"name": "NomeArquivo",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "fato_pedidocompra"
+		}
+	}
+}
